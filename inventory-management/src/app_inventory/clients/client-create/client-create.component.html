@@ -1,0 +1,13 @@
+
+<mat-card>
+  
+  <mat-spinner *ngIf="isLoading"></mat-spinner>
+  <form [formGroup]="form" (submit)="onSaveClient()" *ngIf="!isLoading">
+    <mat-form-field>
+      <input title="Client Name" matInput type="text" formControlName="name">
+    </mat-form-field>
+    <mat-error *ngIf="form.get('name').invalid">Please enter name</mat-error>
+    <button color="primary"
+    mat-raised-button type="submit">Save Client</button>
+  </form>
+</mat-card>

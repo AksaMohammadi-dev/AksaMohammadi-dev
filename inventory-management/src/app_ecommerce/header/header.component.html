@@ -1,0 +1,24 @@
+<mat-toolbar color="primar">
+  <span><a routerLink="/">Home (E-commerce)</a></span>
+  <span class="spacer"></span>
+  <ul>
+    <li *ngIf="userIsAuthenticated && userIsAdmin">
+      <a mat-button routerLink="/activate-employees" routerLinkActive="mat-accent">Approve Employees</a>
+    </li> 
+    <li *ngIf="userIsAuthenticated && userIsAdmin">
+      <a mat-button routerLink="/list-update-price" routerLinkActive="mat-accent">Update Prices</a>
+    </li>
+    <li *ngIf="userIsAuthenticated && userIsEmployee">
+      <a mat-button routerLink="" routerLinkActive="mat-accent">Orders</a>
+    </li>
+    <li *ngIf="!userIsAuthenticated">
+      <a mat-button routerLink="/auth/login" routerLinkActive="mat-accent">Login</a>
+    </li>
+    <li *ngIf="!userIsAuthenticated">
+      <a mat-button routerLink="/auth/signup" routerLinkActive="mat-accent">Sign-up</a>
+    </li>
+    <li *ngIf="userIsAuthenticated">
+      <button (click)="onLogout()" mat-button>Logout</button>
+    </li>
+  </ul>
+</mat-toolbar>

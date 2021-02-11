@@ -1,0 +1,134 @@
+ 
+<mat-card>
+  
+  <mat-spinner *ngIf="isLoading"></mat-spinner>
+  <div>
+    <span class="material-icons" style="cursor: pointer;" (click)="onAddInvoiceDetails()">
+      add
+      </span>
+  </div>
+  <table mdbTable *ngIf="invoiceDetails && invoiceDetails.length > 0">
+    <th></th>
+      <th>
+        <span>Quantity</span>
+      </th>
+      <th>
+        <span>Product</span>
+      </th>
+      <th>
+      </th>
+    <tbody *ngFor="let invoiceData of invoiceDetails">
+      
+      <tr mdbTableCol>
+        <td>
+          <span style="cursor: pointer;" class="material-icons" (click)="onSaveInvoiceDetails(invoiceData)">
+            done
+          </span>
+          <span class="material-icons" style="cursor: pointer;" (click)="onDeleteVendorInvoiceDetails(invoiceData)">
+            delete
+          </span>
+        </td>
+        <td>
+          <input [(ngModel)]="invoiceData.quantity" name="qty" #qty="ngModel" />
+        </td>
+        <td>
+          <select [(ngModel)]="invoiceData.product" ngModel class="form-control">
+            <option *ngFor="let prod of products" value={{prod._id}}>
+              {{prod.number}}</option>
+          </select>
+        </td>
+        <td>
+          <span *ngIf="!invoiceData.viewVendorInvoiceProductDetail" class="material-icons" style="cursor: pointer;" (click)="onGetInvoiceProductDetails(invoiceData)">
+            exposure
+            </span>
+            <span *ngIf="invoiceData.viewVendorInvoiceProductDetail" class="material-icons" style="cursor: pointer;" (click)="onAddInvoiceProductDetails(invoiceData)">
+              add
+              </span>
+            
+        </td>
+        <td>
+          <table *ngIf="invoiceData.viewVendorInvoiceProductDetail && invoiceData.vendorInvoiceProductDetail && invoiceData.vendorInvoiceProductDetail.length > 0">
+            <tbody *ngFor="let vendorInvoiceProductDetail of invoiceData.vendorInvoiceProductDetail">
+              <td>
+                <span style="cursor: pointer;" class="material-icons" (click)="onSaveInvoiceProductDetails(vendorInvoiceProductDetail, invoiceData.id, invoiceData.stockId)">
+                  done
+                </span>
+                <span class="material-icons" style="cursor: pointer;" (click)="onDeleteVendorInvoiceProductDetails(vendorInvoiceProductDetail, invoiceData)">
+                  delete
+                </span>
+              </td>
+              <td>
+                <input [(ngModel)]="vendorInvoiceProductDetail.serialno" title="Serial No" name="serialno" #serialno="ngModel" />
+              </td>
+              <td>
+                <select [(ngModel)]="vendorInvoiceProductDetail.subLoc" ngModel class="form-control">
+                  <option *ngFor="let subLoc of subLocations" value={{subLoc.id}}>
+                    {{subLoc.name}}</option>
+                </select>
+              </td>
+              <td>
+                <select [(ngModel)]="vendorInvoiceProductDetail.loc" ngModel class="form-control">
+                  <option *ngFor="let loc of locations" value={{loc.id}}>
+                    {{loc.name}}</option>
+                </select>
+              </td>
+            </tbody>
+          </table>
+        </td>
+      </tr>
+      <tr>
+        <!-- <td>
+          <table *ngIf="invoiceData.viewVendorInvoiceProductDetail && invoiceData.vendorInvoiceProductDetail && invoiceData.vendorInvoiceProductDetail.length > 0">
+            <tbody *ngFor="let vendorInvoiceProductDetail of invoiceData.vendorInvoiceProductDetail">
+              <td>
+                <span style="cursor: pointer;" class="material-icons" (click)="onSaveInvoiceProductDetails(vendorInvoiceProductDetail, invoiceData.id)">
+                  done
+                </span>
+              </td>
+              <td>
+                <input [(ngModel)]="vendorInvoiceProductDetail.serialno" title="Serial No" name="serialno" #serialno="ngModel" />
+              </td>
+              <td>
+                <select [(ngModel)]="vendorInvoiceProductDetail.subLoc" ngModel class="form-control">
+                  <option *ngFor="let subLoc of subLocations" value={{subLoc.id}}>
+                    {{subLoc.name}}</option>
+                </select>
+              </td>
+              <td>
+                <select [(ngModel)]="vendorInvoiceProductDetail.loc" ngModel class="form-control">
+                  <option *ngFor="let loc of locations" value={{loc.id}}>
+                    {{loc.name}}</option>
+                </select>
+              </td>
+            </tbody>
+          </table>
+        </td> -->
+      </tr>
+
+      <!-- <tr *ngIf="invoiceData.viewVendorInvoiceProductDetail && invoiceData.vendorInvoiceProductDetail && invoiceData.vendorInvoiceProductDetail.length > 0"
+        *ngFor="let vendorInvoiceProductDetail of invoiceData.vendorInvoiceProductDetail">
+        <td>
+          <span style="cursor: pointer;" class="material-icons" (click)="onSaveInvoiceProductDetails(vendorInvoiceProductDetail, invoiceData.id)">
+            done
+          </span>
+        </td>
+        <td>
+          <input [(ngModel)]="vendorInvoiceProductDetail.serialno" title="Serial No" name="serialno" #serialno="ngModel" />
+        </td>
+        <td>
+          <select [(ngModel)]="vendorInvoiceProductDetail.subLoc" ngModel class="form-control">
+            <option *ngFor="let subLoc of subLocations" value={{subLoc.id}}>
+              {{subLoc.name}}</option>
+          </select>
+        </td>
+        <td>
+          <select [(ngModel)]="vendorInvoiceProductDetail.loc" ngModel class="form-control">
+            <option *ngFor="let loc of locations" value={{loc.id}}>
+              {{loc.name}}</option>
+          </select>
+        </td>
+      </tr> -->
+    </tbody>
+  </table>
+
+</mat-card> 

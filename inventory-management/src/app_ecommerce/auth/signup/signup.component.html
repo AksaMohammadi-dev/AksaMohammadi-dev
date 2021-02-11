@@ -1,0 +1,45 @@
+<mat-card>
+    <mat-spinner *ngIf="isLoading"></mat-spinner>
+    <form (submit)="onSignup(signupForm)" #signupForm="ngForm" *ngIf="!isLoading">
+      <mat-form-field>
+        <input matInput type="firstname" placeholder="First Name" name="firstname" 
+        ngModel #firstnameInput="ngModel" required firstname>
+      </mat-form-field>
+      <mat-error *ngIf="firstnameInput.invalid">Please enter a First Name.</mat-error>
+
+      <mat-form-field>
+        <input matInput type="lastname" placeholder="Last Name" name="lastname" 
+        ngModel #lastnameInput="ngModel" required lastname>
+      </mat-form-field>
+      <mat-error *ngIf="lastnameInput.invalid">Please enter a Last Name.</mat-error>
+
+      <mat-form-field>
+        <input matInput type="phone" placeholder="Phone" name="phone" 
+        ngModel #phoneInput="ngModel" required phone>
+      </mat-form-field>
+      <mat-error *ngIf="phoneInput.invalid">Please enter Phone number.</mat-error>
+
+      <mat-form-field>
+        <input matInput type="email" placeholder="E-Mail" name="email" 
+        ngModel #emailInput="ngModel" required email>
+      </mat-form-field>
+      <mat-error *ngIf="emailInput.invalid">Please enter a valid email.</mat-error>
+      
+      <mat-form-field>
+        <input matInput name="password" ngModel #passwordInout="ngModel" type="password" placeholder="Password">
+      </mat-form-field>
+      <mat-error *ngIf="passwordInout.invalid">Please enter a valid Password</mat-error>
+      <mat-form-field>
+        <input matInput name="confirmPassword" ngModel #confirmPasswordInout="ngModel" type="password" placeholder="Confirm Password">
+      </mat-form-field>
+
+      <mat-radio-group aria-label="Select an option" name="userType" ngModel #favoriteSeason="ngModel">
+        <mat-radio-button value="1">Customer</mat-radio-button>
+        <mat-radio-button value="2">Employee</mat-radio-button>
+      </mat-radio-group>
+
+      <button color="accent" *ngIf="!isLoading"
+      mat-raised-button type="submit">Sign-up</button>
+    </form>
+  </mat-card>
+  

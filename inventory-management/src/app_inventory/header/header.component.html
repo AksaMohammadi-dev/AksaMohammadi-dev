@@ -1,0 +1,36 @@
+<mat-toolbar color="primar">
+  <span><a routerLink="/">Home</a></span>
+  <span class="spacer"></span>
+  <ul>
+    <li *ngIf="userIsAuthenticated">
+      <a mat-button routerLink="/list-client" routerLinkActive="mat-accent">Clients</a>
+    </li> 
+    <li *ngIf="userIsAuthenticated">
+      <a mat-button routerLink="/list-vendor" routerLinkActive="mat-accent">Vendors</a>
+    </li>
+    <li *ngIf="userIsAuthenticated">
+      <a mat-button routerLink="/list-vendor-invoice" routerLinkActive="mat-accent">Vendors Invoice</a>
+    </li>
+    <li *ngIf="userIsAuthenticated">
+      <a mat-button routerLink="/list-vendor-purchase-order" routerLinkActive="mat-accent">Vendors Purchase Order</a>
+    </li>
+    <li *ngIf="userIsAuthenticated">
+      <a mat-button routerLink="/list-vendor-payment-management" routerLinkActive="mat-accent">Vendors Payment</a>
+    </li>
+    <li *ngIf="userIsAuthenticated">
+      <a mat-button routerLink="/list-product" routerLinkActive="mat-accent">Products</a>
+    </li>
+    <li *ngIf="userIsAuthenticated">
+      <a mat-button routerLink="/list-category" routerLinkActive="mat-accent">Category</a>
+    </li>
+    <li *ngIf="!userIsAuthenticated">
+      <a mat-button routerLink="/auth/login" routerLinkActive="mat-accent">Login</a>
+    </li>
+    <li *ngIf="!userIsAuthenticated">
+      <a mat-button routerLink="/auth/signup" routerLinkActive="mat-accent">Sign-up</a>
+    </li>
+    <li *ngIf="userIsAuthenticated">
+      <button (click)="onLogout()" mat-button>Logout</button>
+    </li>
+  </ul>
+</mat-toolbar>

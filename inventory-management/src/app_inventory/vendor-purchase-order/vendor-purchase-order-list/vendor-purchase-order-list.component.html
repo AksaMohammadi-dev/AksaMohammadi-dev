@@ -1,0 +1,18 @@
+<div *ngIf="userIsAuthenticated">
+  <button mat-button routerLink="/create-vendor-purchase-order" routerLinkActive="mat-accent" color="primary">New Vendor Purchase Order</button>
+</div>
+<mat-spinner *ngIf="isLoading"></mat-spinner>
+<mat-accordion multi="true" *ngIf="vendorPurchaseOrders && vendorPurchaseOrders.length > 0 && !isLoading">
+  <mat-expansion-panel *ngFor="let vendorPurchaseOrder of vendorPurchaseOrders">
+    <mat-expansion-panel-header>
+      {{vendorPurchaseOrder.ponumber}}
+    </mat-expansion-panel-header>
+    
+    <mat-action-row *ngIf="userIsAuthenticated && userId === vendorPurchaseOrder.creator">
+      <a mat-button color="primary" [routerLink]="['/edit-vendor-purchase-order', vendorPurchaseOrder.id]">EDIT</a>
+      <button mat-button color="warn" (click)="onDelete(vendorPurchaseOrder.id)">DELETE</button>
+    </mat-action-row>
+  </mat-expansion-panel>
+</mat-accordion>
+<mat-paginator [length]="totalVendorPurchaseOrders" [pageSize]="vendorPurchaseOrdersPerPage" [pageSizeOptions]="pageSizeOptions" (page)="onChangePage($event)" *ngIf="vendorPurchaseOrders && vendorPurchaseOrders.length > 0"></mat-paginator>
+<p class="info-text mat-body-1" *ngIf="vendorPurchaseOrders.length == 0 && !isLoading">No Vendor Purchase Orders found</p>

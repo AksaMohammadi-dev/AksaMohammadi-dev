@@ -1,0 +1,24 @@
+
+<mat-card>
+  
+  <mat-spinner *ngIf="isLoading"></mat-spinner>
+  <form [formGroup]="form" (submit)="onUpdatePrice()" *ngIf="!isLoading">
+    <mat-form-field>
+      <input title="Number" matInput type="text" formControlName="number">
+    </mat-form-field>
+    <mat-form-field>
+      <input title="Price" matInput type="text" formControlName="price">
+    </mat-form-field>
+    <mat-form-field>
+      <input title="CGST" matInput type="text" formControlName="cgst">
+    </mat-form-field>
+    <mat-form-field>
+      <input title="SGST" matInput type="text" formControlName="sgst">
+    </mat-form-field>
+    <mat-form-field>
+      <input title="Sell Price" matInput type="text" formControlName="sellPrice">
+    </mat-form-field>
+    <button color="primary"
+    mat-raised-button type="submit">Update</button>
+  </form>
+</mat-card>

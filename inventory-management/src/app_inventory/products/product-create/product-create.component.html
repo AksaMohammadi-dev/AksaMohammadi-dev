@@ -1,0 +1,57 @@
+
+<mat-card>
+  
+  <mat-spinner *ngIf="isLoading"></mat-spinner>
+  <form [formGroup]="form" (submit)="onSaveProduct()" *ngIf="!isLoading">
+    <mat-form-field>
+      <input title="Product number" matInput type="text" formControlName="number">
+    </mat-form-field>
+    <mat-error *ngIf="form.get('number').invalid">Please enter number</mat-error>
+    <mat-form-field>
+      <input title="Product description" matInput type="text" formControlName="description">
+    </mat-form-field>
+    <mat-error *ngIf="form.get('description').invalid">Please enter description</mat-error>
+    <mat-form-field>
+      <input title="Price" matInput type="text" formControlName="price">
+    </mat-form-field>
+    <mat-error *ngIf="form.get('price').invalid">Please enter price</mat-error>
+    <mat-form-field>
+      <input title="CGST" matInput type="text" formControlName="cgst">
+    </mat-form-field>
+    <mat-error *ngIf="form.get('cgst').invalid">Please enter CGST</mat-error>
+    <mat-form-field>
+      <input title="SGST" matInput type="text" formControlName="sgst">
+    </mat-form-field>
+    <mat-error *ngIf="form.get('sgst').invalid">Please enter SGST</mat-error>
+    <mat-select class="mat-select" placeholder="Category" (selectionChange)="selectedCategoryValue($event)" [(value)]="selectedCategory">
+      <mat-option  *ngFor="let catgry of categoriesLst; let i = index;" [value]="catgry._id">
+        {{catgry.name}}
+      </mat-option>
+    </mat-select>
+    <mat-select class="mat-select" placeholder="Vendor" (selectionChange)="selectedVendorValue($event)" [(value)]="selectedVendor">
+      <mat-option  *ngFor="let vendor of vendorLst; let i = index;" [value]="vendor._id">
+        {{vendor.name}}
+      </mat-option>
+    </mat-select>
+    <div>
+      <button class="btn-file" [disabled]="disableImgBtn" mat-stroked-button type="button" (click)="filePicker.click()">Pick Image</button>
+     
+      <span class="material-icons" style="cursor: pointer;" (click)="deleteImg()">
+        delete
+      </span>
+      <input type="file" #filePicker (change)="onImagePick($event)">
+    </div>
+    <!-- <mat-icon class="material-icons"></mat-icon> -->
+    
+    <div class="image-preview" *ngIf="imagePreview !== '' && imagePreview && form.get('image').valid">
+      <img [src]="imagePreview" [alt]="form.value.title">
+    </div>
+    <div >
+      <button class="btn-save" color="primary"
+      mat-raised-button type="submit">Save Product</button>
+      <button class="btn-back" color="primary" routerLink="/list-product"
+      mat-raised-button type="submit">Back</button>
+    </div>
+    
+  </form>
+</mat-card>

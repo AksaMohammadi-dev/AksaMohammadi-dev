@@ -1,0 +1,15 @@
+
+<mat-spinner *ngIf="isLoading"></mat-spinner>
+<mat-accordion multi="true" *ngIf="updatePrices && updatePrices.length > 0 && !isLoading">
+  <mat-expansion-panel *ngFor="let updatePrice of updatePrices">
+    <mat-expansion-panel-header>
+      {{updatePrice.number}}
+    </mat-expansion-panel-header>
+    
+    <mat-action-row *ngIf="userIsAuthenticated">
+      <a mat-button color="primary" [routerLink]="['/edit-update-price', updatePrice.id]">EDIT</a>
+    </mat-action-row>
+  </mat-expansion-panel>
+</mat-accordion>
+<mat-paginator [length]="totalClients" [pageSize]="updatePricesPerPage" [pageSizeOptions]="pageSizeOptions" (page)="onChangePage($event)" *ngIf="updatePrices && updatePrices.length > 0"></mat-paginator>
+<p class="info-text mat-body-1" *ngIf="updatePrices.length == 0 && !isLoading">No Products found</p>

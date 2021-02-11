@@ -1,0 +1,29 @@
+
+<mat-card>
+  
+  <mat-spinner *ngIf="isLoading"></mat-spinner>
+  <form [formGroup]="form" (submit)="onSaveVendorPurchaseOrder()" *ngIf="!isLoading">
+    <mat-form-field>
+      <input title="Vendor Purchase Order" [disabled]="true" matInput type="text" formControlName="ponumber">
+    </mat-form-field>
+    <mat-form-field>
+      <input title="Quantity" matInput type="text" formControlName="quantity">
+    </mat-form-field>
+    <mat-error *ngIf="form.get('quantity').invalid">Please enter quantity</mat-error>
+
+    <mat-select class="mat-select" placeholder="Vendor" (selectionChange)="selectedVendorValue($event)" [(value)]="selectedVendor">
+      <mat-option  *ngFor="let ven of vendors; let i = index;" [value]="ven._id">
+        {{ven.name}}
+      </mat-option>
+    </mat-select>
+
+    <mat-select class="mat-select" placeholder="Product" (selectionChange)="selectedProductValue($event)" [(value)]="selectedProduct">
+      <mat-option  *ngFor="let prod of products; let i = index;" [value]="prod._id">
+        {{prod.number}}
+      </mat-option>
+    </mat-select>
+
+    <button color="primary" class="btn-save"
+    mat-raised-button type="submit">Save</button>
+  </form>
+</mat-card>

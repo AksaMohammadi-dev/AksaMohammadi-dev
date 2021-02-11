@@ -1,0 +1,61 @@
+
+<mat-card>
+  
+  <mat-spinner *ngIf="isLoading"></mat-spinner>
+  <form [formGroup]="form" (submit)="onSaveVendorPaymentManagement()" *ngIf="!isLoading">
+
+    <mat-select class="mat-select" placeholder="Purchase Order" (selectionChange)="selectedPurchaseOrderValue($event)" [(value)]="selectedPurchaseOrder">
+      <mat-option  *ngFor="let vendor of vendorPurchaseOrders; let i = index;" [value]="vendor.id">
+        {{vendor.name}}
+      </mat-option>
+    </mat-select>
+
+    <mat-select class="mat-select" placeholder="Vendor Invoices" (selectionChange)="selectedVendorInvoiceValue($event)" [(value)]="selectedVendorInvoice">
+      <mat-option  *ngFor="let vendor of vendorInvoices; let i = index;" [value]="vendor.id">
+        {{vendor.name}}
+      </mat-option>
+    </mat-select>
+
+    <mat-select class="mat-select" placeholder="Vendor" (selectionChange)="selectedVendorValue($event)" [(value)]="selectedVendor">
+      <mat-option  *ngFor="let vendor of vendors; let i = index;" [value]="vendor._id">
+        {{vendor.name}}
+      </mat-option>
+    </mat-select>
+
+
+    <mat-form-field>
+      <input title="Amount" matInput type="text" formControlName="amount">
+    </mat-form-field>
+    <mat-error *ngIf="form.get('amount').invalid">Please enter amount</mat-error>
+
+    <mat-form-field>
+      <input title="Mode of payment" matInput type="text" formControlName="modeofpayment">
+    </mat-form-field>
+    <mat-error *ngIf="form.get('modeofpayment').invalid">Please enter Mode of payment</mat-error>
+
+    <mat-form-field>
+      <input title="Payment slip ref" matInput type="text" formControlName="paymentslipref">
+    </mat-form-field>
+    <mat-error *ngIf="form.get('paymentslipref').invalid">Please enter Payment slip ref</mat-error>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Date of Payment</mat-label>
+      <input matInput [matDatepicker]="picker" (dateChange)="addEvent('change', $event)">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field>
+      <input title="Payment location" matInput type="text" formControlName="paymentlocation">
+    </mat-form-field>
+    <mat-error *ngIf="form.get('paymentlocation').invalid">Please enter location</mat-error>
+
+    <mat-form-field>
+      <input title="Remark" matInput type="text" formControlName="remark">
+    </mat-form-field>
+    <mat-error *ngIf="form.get('remark').invalid">Please enter remark</mat-error>
+
+    <button color="primary"
+    mat-raised-button type="submit">Save Vendor Payment Management</button>
+  </form>
+</mat-card>

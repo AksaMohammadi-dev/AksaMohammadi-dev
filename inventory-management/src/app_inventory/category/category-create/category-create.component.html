@@ -1,0 +1,22 @@
+
+<mat-card>
+  
+  <mat-spinner *ngIf="isLoading"></mat-spinner>
+  <form [formGroup]="form" (submit)="onSaveCategory()" *ngIf="!isLoading">
+    <mat-form-field>
+      <mat-select placeholder="Category" (selectionChange)="selectedValue($event)" [(value)]="selectedParentCategory">
+        <mat-option  *ngFor="let catgry of categoriesLst; let i = index;" [value]="catgry._id">
+          {{catgry.name}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+      <input title="Category Name" matInput type="text" formControlName="name">
+    </mat-form-field>
+    <mat-error *ngIf="form.get('name').invalid">Please enter category</mat-error>
+    <button color="primary"
+    mat-raised-button type="submit">Save Category</button>
+    <button color="primary" routerLink="/list-category"
+    mat-raised-button type="submit">Back</button>
+  </form>
+</mat-card>

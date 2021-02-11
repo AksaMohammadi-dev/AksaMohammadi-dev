@@ -1,0 +1,18 @@
+<div *ngIf="userIsAuthenticated">
+  <button mat-button routerLink="/create-client" routerLinkActive="mat-accent" color="primary">New Client</button>
+</div>
+<mat-spinner *ngIf="isLoading"></mat-spinner>
+<mat-accordion multi="true" *ngIf="clients && clients.length > 0 && !isLoading">
+  <mat-expansion-panel *ngFor="let client of clients">
+    <mat-expansion-panel-header>
+      {{client.name}}
+    </mat-expansion-panel-header>
+    
+    <mat-action-row *ngIf="userIsAuthenticated && userId === client.creator">
+      <a mat-button color="primary" [routerLink]="['/edit-client', client.id]">EDIT</a>
+      <button mat-button color="warn" (click)="onDelete(client.id)">DELETE</button>
+    </mat-action-row>
+  </mat-expansion-panel>
+</mat-accordion>
+<mat-paginator [length]="totalClients" [pageSize]="clientsPerPage" [pageSizeOptions]="pageSizeOptions" (page)="onChangePage($event)" *ngIf="clients && clients.length > 0"></mat-paginator>
+<p class="info-text mat-body-1" *ngIf="clients.length == 0 && !isLoading">No clients found</p>

@@ -1,0 +1,18 @@
+<div *ngIf="userIsAuthenticated">
+  <button mat-button routerLink="/create-vendor-payment-management" routerLinkActive="mat-accent" color="primary">New Vendor Payment Management</button>
+</div>
+<mat-spinner *ngIf="isLoading"></mat-spinner>
+<mat-accordion multi="true" *ngIf="vendorPaymentManagements && vendorPaymentManagements.length > 0 && !isLoading">
+  <mat-expansion-panel *ngFor="let vendorPaymentManagement of vendorPaymentManagements">
+    <mat-expansion-panel-header>
+      {{vendorPaymentManagement.name}}
+    </mat-expansion-panel-header>
+    
+    <mat-action-row *ngIf="userIsAuthenticated && userId === vendorPaymentManagement.creator">
+      <a mat-button color="primary" [routerLink]="['/edit-vendorPaymentManagement', vendorPaymentManagement.id]">EDIT</a>
+      <button mat-button color="warn" (click)="onDelete(vendorPaymentManagement.id)">DELETE</button>
+    </mat-action-row>
+  </mat-expansion-panel>
+</mat-accordion>
+<mat-paginator [length]="totalVendorPaymentManagements" [pageSize]="vendorPaymentManagementsPerPage" [pageSizeOptions]="pageSizeOptions" (page)="onChangePage($event)" *ngIf="vendorPaymentManagements && vendorPaymentManagements.length > 0"></mat-paginator>
+<p class="info-text mat-body-1" *ngIf="vendorPaymentManagements.length == 0 && !isLoading">No vendor payment managements found</p>
