@@ -25,7 +25,6 @@ export class ListClientPurchaseOrderComponent implements OnInit {
   userIsAuthenticated = false;
 
   ngOnInit(){
-    console.log('***********',this.currentPage,this.clientsPOPerPage)
     this.clientPOservice.getAllClientPO(this.currentPage,this.clientsPOPerPage).subscribe((POs: any) => {
       this.clientsPO = POs.ClientPurchaseOrder;
       this.totalClientsPO = POs.maxClientPurchaseOrder,
@@ -91,7 +90,6 @@ export class ListClientPurchaseOrderComponent implements OnInit {
         )
       }
     })
-    // console.log('***********',POId)
     // this.clientPOservice.deleteClientPO(POId)
     // .subscribe(
     //   () => {

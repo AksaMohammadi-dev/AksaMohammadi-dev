@@ -73,7 +73,6 @@ export class EditClientPurchaseOrderComponent implements OnInit {
   }
 
   deleteRecord(row){
-    console.log('&&&&77',row)
     Swal.fire({
       title: 'Are you sure?',
       text: "You wanted to delete Purchase Order details raise for product '"+ row.productId+"'",
@@ -83,7 +82,6 @@ export class EditClientPurchaseOrderComponent implements OnInit {
       cancelButtonText: 'Cancel'
     }).then((result) => {
       if (result.value) {
-        console.log('************',row._id)
         this.clientPOService.deleteClientPurchaseOrderDetail(row._id).subscribe((PO: any) => {
           if(PO.status){
             this.clientPOService.getSingleClientPurchaseOrder(this.PO_id).subscribe((data:any) => {
@@ -154,7 +152,6 @@ export class EditClientPurchaseOrderComponent implements OnInit {
     this.clientPOService.createClientPODetails(po).subscribe((PO: any) => {
       if(PO.status){
         this.addShow = false;
-        console.log(PO)
         this.clientPOService.getSingleClientPurchaseOrder(this.PO_id).subscribe((data:any) => {
           if(data.status){
             this.clientPOId = data.clientPurchaseOrder._id;

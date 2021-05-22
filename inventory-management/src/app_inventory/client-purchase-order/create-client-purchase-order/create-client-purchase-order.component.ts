@@ -59,7 +59,6 @@ export class CreateClientPurchaseOrderComponent implements OnInit {
             this.created = false;
             this.clientPOId = PO.clientPurchaseOrder._doc._id
             this.POnum = PO.clientPurchaseOrder._doc.ponumber
-            console.log(PO.clientPurchaseOrder._doc)
             Swal.fire(
               'Success!',
               "Your Purcahse order '"+this.POnum+"' has been raised successfully.",
@@ -99,7 +98,6 @@ date;
     this.clientPOservice.createClientPODetails(po).subscribe((PO: any) => {
       if(PO.status){
         this.created = false;
-        console.log(PO)
         Swal.fire(
           'Success!',
           "Your Purcahse order details has been raised successfully.",
