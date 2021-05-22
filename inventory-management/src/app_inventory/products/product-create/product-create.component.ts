@@ -28,6 +28,7 @@ export class ProductCreateComponent implements OnInit, OnDestroy {
   imgToDelete: string;
   categoriesLst: [];
   vendorLst: [];
+  number:any;
   private authStatusSubs: Subscription;
 
   constructor(public productService: ProductService, public authService: AuthService, public route: ActivatedRoute) {
@@ -41,8 +42,8 @@ export class ProductCreateComponent implements OnInit, OnDestroy {
       this.isLoading = false;
     });
     this.form = new FormGroup({
-      number: new FormControl(null, {
-        validators: [Validators.required, Validators.minLength(3)]
+      number: new FormControl({value: '', disabled: true}, {
+        validators: [Validators.required]
       }),
       description: new FormControl(null, {
         validators: [Validators.required]
@@ -63,7 +64,7 @@ export class ProductCreateComponent implements OnInit, OnDestroy {
     });
 
     this.productService.getMetaData()
-    .subscribe(metaDataRes => {
+    .subscribe((metaDataRes:any) => {
       this.categoriesLst = metaDataRes.categories;
       this.vendorLst = metaDataRes.vendors;
 
@@ -104,6 +105,8 @@ export class ProductCreateComponent implements OnInit, OnDestroy {
           });
         }
         else {
+          this.number = 'PROD' + ++metaDataRes.productCnt,
+          this.form.setValue({number: this.number, description: "",price: "",cgst:"",sgst:"",image:""}); 
           this.mode = 'create';
           this.productId = null;
         }
@@ -112,6 +115,7 @@ export class ProductCreateComponent implements OnInit, OnDestroy {
     
   }
 
+  
   ngOnDestroy(){
     this.authStatusSubs.unsubscribe();
   }
@@ -124,7 +128,7 @@ export class ProductCreateComponent implements OnInit, OnDestroy {
     if (this.mode === 'create') {
 
       this.productService.addProduct(
-        this.form.value.number,
+        this.number,
         this.form.value.description,
         this.form.value.cgst,
         this.form.value.sgst,
@@ -138,7 +142,7 @@ export class ProductCreateComponent implements OnInit, OnDestroy {
 
       this.productService.updateProduct(
         this.productId,
-        this.form.value.number,
+        this.number,
         this.form.value.description,
         this.form.value.cgst,
         this.form.value.sgst,

@@ -35,7 +35,6 @@ export class UpdatePriceListComponent implements OnInit, OnDestroy {
       this.isLoading = false;
       this.totalUpdatePrices = updatePriceData.updatePriceCount;
       this.updatePrices = updatePriceData.updatePrices;
-      console.log('aaaaa', this.updatePrices);
     });
     this.userIsAuthenticated = this.authService.getIsAuth();
     this.authStatusSub = this.authService

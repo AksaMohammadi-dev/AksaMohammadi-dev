@@ -1,0 +1,117 @@
+    <mat-spinner *ngIf="isLoading"></mat-spinner>
+    <div>
+      <label>Client Payment Number: </label>
+      <mat-form-field>
+        
+          <input title="PO number" [disabled]="true" matInput type="text" [(ngModel)]="invoice_no"
+          placeholder="client invoice number" >
+      </mat-form-field>
+    </div>
+    <div>
+        <label>client name: </label>
+        <mat-form-field appearance="outline">
+            <mat-label>choose client name</mat-label>
+            <mat-select [(ngModel)]="selected_id">
+            <mat-option *ngFor="let obj of clients" [value]="obj.id">
+                {{obj.name}}
+            </mat-option>
+            </mat-select>
+        </mat-form-field>     
+        <button (click)="getInvoices()">get invoices</button>
+    </div>
+    <div>
+        <label>client invoices: </label>
+        <mat-form-field appearance="outline">
+            <mat-label>choose client invoice</mat-label>
+            <mat-select [(ngModel)]="selected_invoices">
+            <mat-option *ngFor="let obj of invoices" [value]="obj">
+                {{obj}}
+            </mat-option>
+            </mat-select>
+        </mat-form-field>     
+        <button (click)="getInvoiceDetails()">get invoice detail</button>
+    </div>
+    <div *ngIf="noInvoices == true" >no po numbers found for the selected client...</div>
+    
+    <div *ngIf ="create == true">
+      <p> Create Invoice Payment </p><span class="material-icons" style="cursor: pointer;" (click)="onAddPODetails()">
+         add
+      </span>
+    </div>
+      <table class="table table-hover table-striped">
+        <thead>
+          <tr>
+            <th>PO Number</th>
+            <th>Invoice No</th>
+            <th>Amount Recieved</th>
+            <th>Balance</th>
+            <th>Total Amount</th>
+            <th>Mode Of Payment</th>
+            <th>Payment Slip Ref No</th>
+            <th>Payment Location</th>
+            <th>Date Of Payment</th>
+            <th>Remark</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let course of ClientPaymentDetails">
+            <td><input [(ngModel)]="course.ponumber" name="ponumber" #ponumber="ngModel" /></td>
+
+            <td *ngIf="course.invoicenumber; else tpl">
+              <input [(ngModel)]="course.invoicenumber" name="invoicenumber" #invoicenumber="ngModel" />
+            </td>
+            <ng-template #tpl><td>
+              <input [(ngModel)]="selected_invoices" name="invoicenumber" #invoicenumber="ngModel" />
+            </td></ng-template>
+            <!-- <td><input [(ngModel)]="course.invoiceno" name="invoiceno" #invoiceno="ngModel" /></td> -->
+            <td><input [(ngModel)]="course.amount" name="amount" #amount="ngModel" /></td>
+            
+            <td *ngIf="create == true; else tpl4">
+              <input [(ngModel)]="course.bal" name="bal" #bal="ngModel" />
+            </td>
+
+            <ng-template #tpl4>
+              <td>
+                <input [(ngModel)]="course.bal" name="bal" #bal="ngModel" />
+              </td>
+            </ng-template>
+            <!-- <ng-template #tpl2><td></td></ng-template> -->
+            <td><input [(ngModel)]="course.totalAmount" name="totalAmount" #totalAmount="ngModel"  /></td>
+            <td><input [(ngModel)]="course.modeofpayment" name="modeofpayment" #modeofpayment="ngModel" /></td>
+            <td><input [(ngModel)]="course.paymentslipref" name="paymentslipref" #paymentslipref="ngModel" /></td>
+            <td>
+              <input [(ngModel)]="course.paymentlocation" name="paymentlocation" #paymentlocation="ngModel" />
+            </td>
+            <td *ngIf="course.paymentDate > 0; else tpl1">
+              <input [(ngModel)]="course.paymentDate" name="paymentDate" #paymentDate="ngModel">
+            </td>
+            <ng-template #tpl1>
+              <td>
+                <mat-form-field>
+                  <input matInput
+                    [matDatepicker]="picker"
+                    [(ngModel)]="course.paymentDate"
+                    placeholder="choose a Scheduled Date"
+                    (dateChange)="setDate($event.value)">
+                  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                  <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+              </td>
+            </ng-template>
+            <td *ngIf="course.remark ; else tpl3">
+              <input [(ngModel)]="course.remark" name="remark" #remark="ngModel">
+            </td>
+            <ng-template #tpl3><td>
+                <button color="primary"mat-raised-button (click)="updateClientInvoicePayment(course)" type="submit" >save</button>
+            </td></ng-template>
+            
+            <!-- <td *ngIf="course.paymentDate; else tpl">
+              <button color="primary"mat-raised-button (click)="updateClientInvoicePayment(course)" type="submit" >save</button>
+            </td> -->
+            <ng-template #tpl><td></td></ng-template>
+          </tr>
+        </tbody>
+        
+        
+
+      </table>

@@ -55,7 +55,7 @@ exports.userLogin = (req, res, next)=>{
                 email: fetchedUser.email,
                 userId: fetchedUser._id
             }, process.env.JWT_KEY, {
-                expiresIn: '1h'
+                expiresIn: '10h'
             });
             res.status(200).json({
                 token: token,
@@ -66,7 +66,7 @@ exports.userLogin = (req, res, next)=>{
     })
     .catch(err => {
         return res.status(401).json({
-            message: "Invalid authentication credentials"
+            message: "Invalid authentication credentials",err:err
         });
     });
 }

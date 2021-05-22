@@ -16,6 +16,14 @@ import { VendorPurchaseOrderListComponent } from './vendor-purchase-order/vendor
 import { VendorPurchaseOrderCreateComponent } from './vendor-purchase-order/vendor-purchase-order-create/vendor-purchase-order-create.component';
 import { VendorPaymentManagementListComponent } from './vendor-payment-management/vendor-payment-management-list/vendor-payment-management-list.component';
 import { VendorPaymentManagementCreateComponent } from './vendor-payment-management/vendor-payment-management-create/vendor-payment-management-create.component';
+import { StockListComponent } from './stock/stock-list/stock-list.component';
+import { StockCreateComponent } from './stock/stock-create/stock-create.component';
+import { CreateClientPurchaseOrderComponent } from './client-purchase-order/create-client-purchase-order/create-client-purchase-order.component';
+import { ListClientPurchaseOrderComponent } from './client-purchase-order/list-client-purchase-order/list-client-purchase-order.component';
+import { EditClientPurchaseOrderComponent } from './client-purchase-order/edit-client-purchase-order/edit-client-purchase-order.component';
+import { ClientPaymentManagementComponent } from './client-purchase-order/client-payment-management/client-payment-management.component';
+import { ReportsComponent } from './reports/reports/reports.component';
+import { ClientPaymentComponent } from './client-purchase-order/client-payment/client-payment.component';
 
 
 const routes: Routes = [
@@ -28,6 +36,10 @@ const routes: Routes = [
   { path: 'list-vendor', component: VendorListComponent, canActivate: [AuthGuard] },
   { path: 'create-vendor', component: VendorCreateComponent, canActivate: [AuthGuard] },
   { path: 'edit-vendor/:vendorId', component: VendorCreateComponent, canActivate: [AuthGuard] },
+
+  { path: 'list-stock', component: StockListComponent, canActivate: [AuthGuard] },
+  { path: 'get-stock-records/:stockId', component: StockCreateComponent, canActivate: [AuthGuard] },
+
 
   { path: 'list-client', component: ClientListComponent, canActivate: [AuthGuard] },
   { path: 'create-client', component: ClientCreateComponent, canActivate: [AuthGuard] },
@@ -44,9 +56,16 @@ const routes: Routes = [
   { path: 'create-vendor-purchase-order', component: VendorPurchaseOrderCreateComponent, canActivate: [AuthGuard] },
   { path: 'edit-vendor-purchase-order/:vendorPurchaseOrderId', component: VendorPurchaseOrderCreateComponent, canActivate: [AuthGuard] },
 
+  { path: 'client-purchase-order', component: CreateClientPurchaseOrderComponent, canActivate: [AuthGuard] },
+  { path: 'list-client-purchase-order', component: ListClientPurchaseOrderComponent, canActivate: [AuthGuard] },
+  { path: 'edit-client-purchase-order/:PO_id', component: EditClientPurchaseOrderComponent, canActivate: [AuthGuard] },
+  { path: 'client-payment-management/invoice', component: ClientPaymentManagementComponent, canActivate: [AuthGuard] },
+  { path: 'client-payment-management/payment', component: ClientPaymentComponent, canActivate: [AuthGuard] },
   { path: 'list-vendor-payment-management', component: VendorPaymentManagementListComponent, canActivate: [AuthGuard] },
   { path: 'create-vendor-payment-management', component: VendorPaymentManagementCreateComponent, canActivate: [AuthGuard] },
   { path: 'edit-vendor-payment-management/:vendorPaymentManagementId', component: VendorPaymentManagementCreateComponent, canActivate: [AuthGuard] },
+
+  { path: 'reports', component: ReportsComponent, canActivate: [AuthGuard] },
 
   { path: 'auth', loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule) }
 ];

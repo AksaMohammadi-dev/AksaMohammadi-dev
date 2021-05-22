@@ -1,0 +1,51 @@
+<section class='tableSection'>
+    <h4>Stock Details: </h4>
+    
+    <mat-table class="matTable" [dataSource]="dataSource">
+  
+    <ng-container matColumnDef="serialno">
+      <mat-header-cell *matHeaderCellDef> Serail No </mat-header-cell>
+      <mat-cell *matCellDef="let row"> {{row.serialno}} </mat-cell>
+    </ng-container>
+  
+    <ng-container matColumnDef="loc">
+      <mat-header-cell *matHeaderCellDef> Loc </mat-header-cell>
+      <mat-cell *matCellDef="let row">
+        <mat-select  [(value)]="row.loc"  placeholder={{row.loc}} (click)="editLoc('loc',row.loc)">
+            <mat-option [value]="row" *ngFor="let row of location">
+              {{ row.name }}
+            </mat-option>
+          </mat-select>
+      </mat-cell>
+    </ng-container>
+
+      <ng-container matColumnDef="subloc">
+        <mat-header-cell *matHeaderCellDef> Sub Loc </mat-header-cell>
+        <mat-cell *matCellDef="let row">
+            <mat-select  [(value)]="row.subloc"  placeholder={{row.subloc}} (click)="editSubloc('subloc',row.subloc)">
+              <mat-option [value]="row"  *ngFor="let row of sublocation">
+                {{ row.name }}
+              </mat-option>
+            </mat-select>
+        </mat-cell>
+      </ng-container>
+  
+      <ng-container matColumnDef="createdAt">
+          <mat-header-cell *matHeaderCellDef> created Date </mat-header-cell>
+          <mat-cell *matCellDef="let row">  {{row.createdDate}} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="edit">
+        <mat-header-cell *matHeaderCellDef > edit </mat-header-cell>
+        <mat-cell *matCellDef="let row" >
+            <button (click)="editRecord($event,row)">Save</button>
+        </mat-cell>
+      </ng-container>
+  
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+  
+    </mat-table>
+  
+    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+  </section>

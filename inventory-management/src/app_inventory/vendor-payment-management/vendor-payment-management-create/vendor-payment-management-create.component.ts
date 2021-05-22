@@ -152,12 +152,6 @@ export class VendorPaymentManagementCreateComponent implements OnInit, OnDestroy
       return;
     }
 
-    console.log(this.form.value);
-    console.log(this.selectedPurchaseOrder);
-    console.log(this.selectedVendorInvoice);
-    console.log(this.selectedVendor);
-    console.log(this.paymentDate)
-
     this.isLoading = true;
     if (this.mode === 'create') {
 
@@ -190,7 +184,6 @@ export class VendorPaymentManagementCreateComponent implements OnInit, OnDestroy
   }
 
   addEvent(type: string, event: any) {
-    console.log(`${type}: ${event.value}`);
     this.paymentDate = event.value;
   }
 }

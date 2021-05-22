@@ -1,0 +1,106 @@
+<div >
+    <button mat-button (click)="vendorReports()" color="primary">View Vendor Reports</button>
+    <button mat-button (click)="clientReports()" color="primary">View Client Reports</button>
+</div>
+
+<div *ngIf="venRep && cliRep == false">
+    <h1>Vendor Report</h1>
+    <form [formGroup]="form">
+        <mat-checkbox *ngFor="let cd of columnDefinitions"  [formControlName]="cd.def">{{ cd.label }}&nbsp;&nbsp;&nbsp;&nbsp;</mat-checkbox>
+    </form>
+
+    <!-- <div class="export-container">
+        <button mat-raised-button color="primary" (click)="exportTable()">Export Material Table</button>
+    </div> -->
+
+    <!-- <table id="ExampleMaterialTable" mat-table class="mat-elevation-z8" style="max-height: 3rem;" [dataSource]="dataSource"> -->
+    <mat-table matTableExporter [dataSource]="dataSource" #exporter="matTableExporter" matTableExporter mat-table class="mat-elevation-z8" style="max-height: 3rem;" >
+        <ng-container matColumnDef="vendorName">
+            <mat-header-cell *matHeaderCellDef>Vendor Name</mat-header-cell>
+            <mat-cell *matCellDef="let row;">{{row.vendorDetails[0].name}}</mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="ponumber">
+            <mat-header-cell *matHeaderCellDef>PO Number</mat-header-cell>
+            <mat-cell *matCellDef="let row;">{{row.ponumber}}</mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="invoicenumber">
+            <mat-header-cell *matHeaderCellDef>Invoice Number</mat-header-cell>
+            <mat-cell *matCellDef="let row;">{{row.invoicenumber}}</mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="amount">
+            <mat-header-cell *matHeaderCellDef>Amount</mat-header-cell>
+            <mat-cell *matCellDef="let row;">{{row.amount}}</mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="modeofpayment">
+            <mat-header-cell *matHeaderCellDef>Mode of Payment</mat-header-cell>
+            <mat-cell *matCellDef="let row;">{{row.modeofpayment}}</mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="paymentslipref">
+            <mat-header-cell *matHeaderCellDef>Payment Slip Ref</mat-header-cell>
+            <mat-cell *matCellDef="let row;">{{row.paymentslipref}}</mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="paymentlocation">
+            <mat-header-cell *matHeaderCellDef>Payment Location</mat-header-cell>
+            <mat-cell *matCellDef="let row;">{{row.paymentlocation}}</mat-cell>
+        </ng-container>
+       
+        <mat-header-row *matHeaderRowDef="getDisplayedColumns()">
+        </mat-header-row>
+        <mat-row *matRowDef="let row; columns: getDisplayedColumns()"></mat-row>
+    </mat-table>
+    <br>
+    <button mat-raised-button (click)="exporter.exportTable('csv',{fileName:'Vendor_Payment_Report', sheet: 'vendor_payment_report_sheet'})" style="margin-left: 1100px;position: relative;top: -180px;background-color: #008CBA;">Download Vendor Payment Report</button>
+
+</div>
+
+<div *ngIf="cliRep && venRep == false">
+    <h1>Client Report</h1>
+    <form [formGroup]="form1">
+        <mat-checkbox *ngFor="let cd of clientColumnDefinitions"  [formControlName]="cd.def">{{ cd.label }}&nbsp;&nbsp;&nbsp;&nbsp;</mat-checkbox>
+    </form>
+
+    <mat-table matTableExporter [dataSource]="dataSource1" #exporter="matTableExporter" matTableExporter mat-table class="mat-elevation-z8" style="max-height: 3rem;" >
+        <ng-container matColumnDef="clientName">
+            <mat-header-cell *matHeaderCellDef>Client Name</mat-header-cell>
+            <mat-cell *matCellDef="let row;">{{row.clientDetails[0].name}}</mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="client_ponumber">
+            <mat-header-cell *matHeaderCellDef>PO Number</mat-header-cell>
+            <mat-cell *matCellDef="let row;">{{row.ponumber}}</mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="client_invoicenumber">
+            <mat-header-cell *matHeaderCellDef>Invoice Number</mat-header-cell>
+            <mat-cell *matCellDef="let row;">{{row.invoicenumber}}</mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="client_amount">
+            <mat-header-cell *matHeaderCellDef>Amount</mat-header-cell>
+            <mat-cell *matCellDef="let row;">{{row.amount}}</mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="client_totalAmount">
+            <mat-header-cell *matHeaderCellDef>Total Amount</mat-header-cell>
+            <mat-cell *matCellDef="let row;">{{row.totalAmount}}</mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="client_bal">
+            <mat-header-cell *matHeaderCellDef>Bal</mat-header-cell>
+            <mat-cell *matCellDef="let row;">{{row.bal}}</mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="client_modeofpayment">
+            <mat-header-cell *matHeaderCellDef>Mode of Payment</mat-header-cell>
+            <mat-cell *matCellDef="let row;">{{row.modeofpayment}}</mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="client_paymentslipref">
+            <mat-header-cell *matHeaderCellDef>Payment Slip Ref</mat-header-cell>
+            <mat-cell *matCellDef="let row;">{{row.paymentslipref}}</mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="client_paymentlocation">
+            <mat-header-cell *matHeaderCellDef>Payment Location</mat-header-cell>
+            <mat-cell *matCellDef="let row;">{{row.paymentlocation}}</mat-cell>
+        </ng-container>
+       
+        <mat-header-row *matHeaderRowDef="getClientDisplayedColumns()">
+        </mat-header-row>
+        <mat-row *matRowDef="let row; columns: getClientDisplayedColumns()"></mat-row>
+    </mat-table>
+
+    <button mat-raised-button (click)="exporter.exportTable('csv',{fileName:'Client_Payment_Report', sheet: 'client_payment_report_sheet'})" style="margin-left: 1100px;position: relative;top: -180px;background-color: #008CBA;">Download Client Payment Report</button>
+</div>

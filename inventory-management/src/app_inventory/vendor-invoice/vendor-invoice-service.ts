@@ -95,9 +95,9 @@ export class VendorInvoiceService{
   }
   
 
-  deleteVendorInvoiceProductDetails(vendorInvoiceId: string) {
+  deleteVendorInvoiceProductDetails(vendorInvoice: any) {
 
-    return this.http.delete(BACKEND_URL + '/vendor-invoice/vendor-invoice-product-detail-delete/' + vendorInvoiceId);
+    return this.http.post(BACKEND_URL + '/vendor-invoice/vendor-invoice-product-detail-delete' , vendorInvoice);
 
   }
 

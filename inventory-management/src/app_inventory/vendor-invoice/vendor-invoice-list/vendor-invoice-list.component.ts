@@ -4,6 +4,9 @@ import { VendorInvoiceService } from '../vendor-invoice-service';
 import { Subscription } from 'rxjs';
 import { PageEvent } from '@angular/material';
 import { AuthService } from 'src/app_inventory/auth/auth.service';
+import { MatDialog } from '@angular/material';
+import { SuccessMessageComponent } from 'src/app_inventory/success-message/success-message.component';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-vendor-invoice-list',
@@ -24,9 +27,9 @@ export class VendorInvoiceListComponent implements OnInit, OnDestroy {
   userId: string;
   private authStatusSub: Subscription;
   userIsAuthenticated = false;
-
-  constructor(public vendorInvoicesService: VendorInvoiceService, private authService: AuthService,){
-
+  public result:any;
+  public show = false;
+  constructor(public vendorInvoicesService: VendorInvoiceService, private authService: AuthService, private dialog: MatDialog){
   }
 
   ngOnInit(){
@@ -56,9 +59,14 @@ export class VendorInvoiceListComponent implements OnInit, OnDestroy {
       });
     });
   }
-
+  public ven = false
+  public del = false
+  public tick = true
   onAddInvoiceDetails(){
-    debugger;
+    // debugger;
+    this.ven = true
+    this.del = true
+    this.tick = false
     let vendorInvoice = {} as VendorInvoice;
     vendorInvoice.creator = '';
     vendorInvoice.id = '';
@@ -70,17 +78,26 @@ export class VendorInvoiceListComponent implements OnInit, OnDestroy {
   }
 
   onDeleteInvoice(row){
-    
+    this.ven = false
+    this.del = false
     this.vendorInvoicesService.deleteVendorInvoice(row.id)
-      .subscribe(response => {
-        console.log(response);
+      .subscribe((response:any) => {
+          if(response.status){
+            let index = _.findIndex(this.vendorInvoices, function(o) { 
+              return o.id == row.id; 
+            });
+            this.vendorInvoices.splice(index, 1);
+             this.dialog.open(SuccessMessageComponent,  {data:{ message: "Vendor invoice is deleted successfully.!", delete: true}})
+          }else{
+            this.dialog.open(SuccessMessageComponent,  {data:{ message: response.message, delete: false}})
+          }
       })
 
   }
 
   onSaveVendorInvoice(vendor){
-
-    
+    this.ven = false
+    this.del = false
     if(vendor._id != ''){
       this.vendorInvoicesService.addVendorInvoice(
         vendor.invoiceno,
@@ -88,8 +105,14 @@ export class VendorInvoiceListComponent implements OnInit, OnDestroy {
         vendor.totalamount,
         this.userId)
         .subscribe(response => {
-          console.log(response);
+          this.result  = response
           vendor.id = response.vendorInvoice.id
+          if(this.result.status){
+            this.show = true;
+            this.dialog.open(SuccessMessageComponent,  {data:{ message: "Vendor invoice is successfully created.!" ,create:true}})
+          }else{
+            this.dialog.open(SuccessMessageComponent,  {data:{ message: "Vendor invoice is successfully created.!" ,create:false}})
+          }
         })
     }
     
@@ -97,11 +120,15 @@ export class VendorInvoiceListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(){
+    this.ven = false
+    this.del = false
     this.vendorInvoicesSub.unsubscribe();
     this.authStatusSub.unsubscribe();
   }
 
   onChangePage(pageData: PageEvent){
+    this.ven = false
+    this.del = false
     this.isLoading = true;
     this.currentPage = pageData.pageIndex + 1;
     this.vendorInvoicesPerPage = pageData.pageSize;

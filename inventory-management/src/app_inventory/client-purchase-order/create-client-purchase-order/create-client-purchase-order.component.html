@@ -1,0 +1,81 @@
+
+<mat-card>
+    <mat-spinner *ngIf="isLoading"></mat-spinner>
+    <div *ngIf ="created == false">
+      <label>Purchase order number: </label>
+      <mat-form-field>
+          <input title="PO number" [disabled]="true" matInput type="text" placeholder="{{POnum}}">
+      <!-- <input title="PO num" matInput type="text"> -->
+      </mat-form-field>
+    </div>
+    <div *ngIf="created">
+        <button color="primary"mat-raised-button (click)=openDialog() type="submit">Create Purchase Order</button>
+    </div>      
+</mat-card>
+<mat-card>
+    <div *ngIf ="created == false">
+        <!-- <button color="primary"mat-raised-button (click)=PODetails()>Add Purchase Order</button> -->
+        <p> Purchase order details </p><span class="material-icons" style="cursor: pointer;" (click)="onAddPODetails()">
+           add
+        </span>
+    </div>
+  <table mdbTable >
+    <tbody *ngFor="let PODetail of ClientPODetail">
+      <!-- <th></th> -->
+      <th>
+        <span>productId</span>
+      </th>
+      <th>
+        <span>quantity</span>
+      </th>
+      <th>
+        <span>scheduledDate</span>
+      </th>
+      <th>
+        <span>status</span>
+      </th>
+      <th ></th>
+
+      <tr mdbTableCol>
+        
+        <!-- <td>
+          <span class="material-icons" style="cursor: pointer;" (click)="onDeleteVendorInvoiceDetails(invoiceData)">
+            delete
+          </span>
+        </td> -->
+        <td>
+          <select [(ngModel)]="PODetail.productId" ngModel class="form-control">
+            <option *ngFor="let prod of products" value={{prod.number}}>
+              {{prod.number}}</option>
+          </select>
+        </td>
+        <td>
+          <input [(ngModel)]="PODetail.quantity" name="quantity" #quantity="ngModel" />
+        </td>
+        <td>
+          <mat-form-field>
+            <input matInput
+              [matDatepicker]="picker"
+              [(ngModel)]="PODetail.scheduledDate"
+              placeholder="choose a Scheduled Date"
+              (dateChange)="setDate($event.value)">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+          <!-- <input [(ngModel)]="PODetail.scheduledDate" name="scheduledDate" #scheduledDate="ngModel" /> -->
+        </td>
+        <td>
+          <input [(ngModel)]="PODetail.status" name="status" #status="ngModel" />
+        </td>
+        <td >
+          <span style="cursor: pointer;" class="material-icons" (click) = "onSaveClientPO(PODetail)">
+            done
+          </span>
+        </td>
+        
+      </tr>
+    </tbody>
+  </table>
+    
+</mat-card>
+  

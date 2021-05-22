@@ -10,6 +10,7 @@ import { AuthService } from 'src/app_inventory/auth/auth.service';
 import {MatDialog} from '@angular/material/dialog';
 import {HttpClient} from '@angular/common/http';
 import * as _ from 'lodash';
+import { SuccessMessageComponent } from 'src/app_inventory/success-message/success-message.component';
 
 @Component({
   selector: 'app-vendor-invoice-create',
@@ -32,6 +33,9 @@ export class VendorInvoiceCreateComponent implements OnInit, OnDestroy {
   products: [];
   imagePreview: string;
   private authStatusSubs: Subscription;
+  public ven = false
+  public del = false
+  public delShow = false
 
   constructor(public vendorInvoiceService: VendorInvoiceService, 
     public authService: AuthService, 
@@ -104,9 +108,9 @@ export class VendorInvoiceCreateComponent implements OnInit, OnDestroy {
     });
     
   }
-
+  productDetials:any = []
   onGetInvoiceProductDetails(invoiceData){
-
+    
     this.vendorInvoiceService.getVendorInvoicesProductDetails(invoiceData.id)
       .subscribe(vendorInvoiceDetailData => {
         invoiceData.viewVendorInvoiceProductDetail = true;
@@ -119,8 +123,9 @@ export class VendorInvoiceCreateComponent implements OnInit, OnDestroy {
           vendorInvoiceProductDetail.loc = vendorInvoiceDetail.loc;
           vendorInvoiceProductDetail.vendorinvoicedetail = vendorInvoiceDetail.vendorinvoicedetail;
           vendorInvoiceProductDetail.stockId = vendorInvoiceDetail.stockId;
-          
+         
           invoiceData.vendorInvoiceProductDetail.push(vendorInvoiceProductDetail)
+          this.productDetials = invoiceData;
         })
 
         
@@ -131,6 +136,8 @@ export class VendorInvoiceCreateComponent implements OnInit, OnDestroy {
 
   onAddInvoiceDetails(){
     // debugger;
+    this.ven = true
+    this.del = true
     this.invoiceDetails.push({
       quantity: '0',
       id: '',
@@ -142,18 +149,21 @@ export class VendorInvoiceCreateComponent implements OnInit, OnDestroy {
   }
 
   onAddInvoiceProductDetails(invoiceDetail){
-    
+    this.ven = true
+    this.del = true
     invoiceDetail.vendorInvoiceProductDetail.push({
       id: '',
       serialno: '',
       subLoc: '',
       loc: '',
+      stock: '',
       vendorinvoicedetail: invoiceDetail.id
     }) ;
   }
 
   onSaveInvoiceDetails(invoiceDetail){
-
+    this.ven = false
+    this.del = false
     //save invoice details before adding invoice product details
     if(invoiceDetail.id == ''){
       this.vendorInvoiceService.addVendorInvoiceDetail(
@@ -161,15 +171,21 @@ export class VendorInvoiceCreateComponent implements OnInit, OnDestroy {
         invoiceDetail.product,
         this.vendorInvoiceId,
         this.userId)
-        .subscribe(response => {
-          console.log(response);
+        .subscribe((response:any) => {
           invoiceDetail.id = response.vendorInvoice.id
           invoiceDetail.stockId = response.vendorInvoice.stockId
+          if(response.status){
+            this.dialog.open(SuccessMessageComponent,  {data:{ message: "Vendor invoice details is successfully created.!",create:true }})
+          }else{
+            this.dialog.open(SuccessMessageComponent,  {data:{ message: "Vendor invoice details is not created.!",create:false }})
+          }
         })
     }
   }
 
   onSaveInvoiceProductDetails(invoiceProductDetails, vendorInvoiceDetailId, stockId){
+    this.ven = false
+    this.del = false
     if(invoiceProductDetails.id == ''){
       this.vendorInvoiceService.addVendorInvoiceProductDetail(
         invoiceProductDetails.serialno,
@@ -178,39 +194,128 @@ export class VendorInvoiceCreateComponent implements OnInit, OnDestroy {
         vendorInvoiceDetailId,
         stockId,
         this.userId)
-        .subscribe(response => {
-          console.log(response);
+        .subscribe((response:any) => {
           invoiceProductDetails.id = response.vendorInvoiceDetail.id
+          invoiceProductDetails.loc = response.vendorInvoiceDetail._doc.loc
+          invoiceProductDetails.subLoc = response.vendorInvoiceDetail._doc.subloc
+
+          if(response.status){
+            let dialogBoxClose = this.dialog.open(SuccessMessageComponent,  {data:{ message: "Vendor invoice product details is successfully created.!", create:true }})
+            dialogBoxClose.afterClosed().pipe().subscribe(name => {
+            })
+          }else{
+            this.dialog.open(SuccessMessageComponent,  {data:{ message: "Vendor invoice product details is not created.!",create:false }})
+          }
         })
     }
   }
 
   onDeleteVendorInvoiceDetails(row){
+    this.ven = true
+    this.del = true
     this.vendorInvoiceService.deleteVendorInvoiceDetail(row.id)
-        .subscribe(response => {
-          let index = _.findIndex(this.invoiceDetails, function(o) { return o.id == row.id; });
-          this.invoiceDetails.splice(index, 1);
+        .subscribe((response:any)=> {
+          this.ven = false
+          this.del = false
+          if(response.status){
+            let index = _.findIndex(this.invoiceDetails, function(o) { 
+              return o.id == row.id; 
+            });
+            this.invoiceDetails.splice(index, 1);
+            this.dialog.open(SuccessMessageComponent,  {data:{ message: "Vendor invoice details is deleted successfully.!", delete: true}})
+          }else{
+            this.dialog.open(SuccessMessageComponent,  {data:{ message: response.message , delete: false}})
+          }
         })
   }
 
   onDeleteVendorInvoiceProductDetails(data, invoiceData){
+    this.ven = true
+    this.del = true
     let index = _.findIndex(invoiceData.vendorInvoiceProductDetail, function(o) { return o.id == data.id; });
       this.vendorInvoiceService.deleteVendorInvoiceProductDetails(data.id)
-        .subscribe(response => {
-          invoiceData.vendorInvoiceProductDetail.splice(index, 1);
+        .subscribe((response:any) => {
+          if(response.status){
+            invoiceData.vendorInvoiceProductDetail.splice(index, 1);
+            let dialogBoxClose = this.dialog.open(SuccessMessageComponent,  {data:{ message: "Vendor invoice product details is deleted successfully.!" , delete: true}})
+            this.vendorInvoiceService.getVendorInvoicesDetails(this.vendorInvoiceId)
+            .subscribe(vendorInvoiceDetailData => {
+              this.invoiceDetails = [];
+                _.each(vendorInvoiceDetailData, (vendorInvoiceDetail) => {
+                  let vendorInvoiceDetailInfo  = {} as VendorInvoiceDetail;
+                  vendorInvoiceDetailInfo.id = vendorInvoiceDetail._id;
+                  vendorInvoiceDetailInfo.quantity = vendorInvoiceDetail.quantity;
+                  vendorInvoiceDetailInfo.product = vendorInvoiceDetail.product;
+                  vendorInvoiceDetailInfo.vendorinvoice = vendorInvoiceDetail.vendorinvoice;
+                  vendorInvoiceDetailInfo.stockId = vendorInvoiceDetail.stockId;
+                  vendorInvoiceDetailInfo.vendorInvoiceProductDetail = [];
+
+                  this.invoiceDetails.push(vendorInvoiceDetailInfo)
+                })
+            });
+            dialogBoxClose.afterClosed().pipe().subscribe(name => {
+                this.ven = false
+                this.del = false
+            })
+          }else{
+            this.dialog.open(SuccessMessageComponent,  {data:{ message: " Vendor invoice product details is not deleted.! please try again later.", delete: false }})
+          }
         })
    
   }
   
  
   ngOnDestroy(){
+    this.ven = true
+    this.del = true
     this.authStatusSubs.unsubscribe();
   }
+  arrayObj:any = []
+  selectedObj :any ={}
+  onSelect(event,a,b) {
+    if ( event.target.checked ) {
+      this.arrayObj.push(a)
+   }else{
+      this.arrayObj.pop(a)
+   }
+   if(this.arrayObj.length >0){
+      this.delShow = true;
+      this.selectedObj.selectedArray = this.arrayObj;
+      this.selectedObj.prodDetials = b;
+    }else{
+      this.selectedObj.selectedArray = [];
+      this.selectedObj.prodDetials = {};
+      this.delShow = false;
+    }
+}
+
+deleteSelected(invoiceData){
+  var idArray = this.selectedObj.selectedArray.map(function (el) { return el.id; });
+  this.vendorInvoiceService.deleteVendorInvoiceProductDetails(this.selectedObj)
+    .subscribe((response:any) => {
+      if(response.status){
+          invoiceData.vendorInvoiceProductDetail = invoiceData.vendorInvoiceProductDetail.filter(function(item){ 
+              return idArray.indexOf( item.id ) == -1; 
+          });
+          invoiceData.vendorInvoiceProductDetail = invoiceData.vendorInvoiceProductDetail
+          invoiceData.quantity = invoiceData.quantity - idArray.length
+        let dialogBoxClose = this.dialog.open(SuccessMessageComponent,  {data:{ message: "Vendor invoice product details is deleted successfully.!" , delete: true}})
+        dialogBoxClose.afterClosed().pipe().subscribe(name => {
+            this.arrayObj = []
+            idArray = [];
+            this.selectedObj = {};
+        })
+      }else{
+        this.dialog.open(SuccessMessageComponent,  {data:{ message: " Vendor invoice product details is not deleted.! please try again later.", delete: false }})
+      }
+    })
+  }
+
 
   onSaveVendorInvoice() {
-    
-    console.log(this.vendorInvoice);
-    console.log(this.invoiceDetails);
+    this.ven = true
+    this.del = true
+  
     // if (this.mode === 'create') {
 
     //   this.vendorInvoiceService.addVendorInvoice(

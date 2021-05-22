@@ -36,7 +36,6 @@ exports.saveClient = (req,res,next) => {
         creator: req.userData.userId,
         createdDate: Date.now()
     });
-    //console.log(client);
     client.save().then(createdClient => {
         res.status(201).json({
         message: 'Client added successfully!!',

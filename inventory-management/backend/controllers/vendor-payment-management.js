@@ -1,9 +1,20 @@
 const VendorPaymentManagement = require('../models/vendor-payment-management');
-  
+const Vendor = require('../models/vendor');
+ 
 exports.getAllVendorPaymentManagements = (req, res, next) => {
     const pageSize = +req.query.pageSize;
     const currentPage = +req.query.page;
-    const vendorPaymentManagementQuery = VendorPaymentManagement.find();
+    // const vendorPaymentManagementQuery = VendorPaymentManagement.find();
+    const vendorPaymentManagementQuery = VendorPaymentManagement.aggregate([
+        { $lookup:
+            {
+               from: "vendors",
+               localField: "vendor",
+               foreignField: "_id",
+               as: "vendorDetails"
+            }
+        }
+    ])
     let fetchedVendorPaymentManagements;
     if(pageSize && currentPage){
         vendorPaymentManagementQuery
@@ -26,7 +37,6 @@ exports.getAllVendorPaymentManagements = (req, res, next) => {
         });
         
         });
-
 }
 
 exports.saveVendorPaymentManagement = (req,res,next) => {
@@ -42,7 +52,6 @@ exports.saveVendorPaymentManagement = (req,res,next) => {
         creator: req.userData.userId,
         createdDate: Date.now()
     });
-    //console.log(vendorPaymentManagement);
     vendorPaymentManagement.save().then(createdVendorPaymentManagement => {
         res.status(201).json({
         message: 'Vendor Payment Management added successfully!!',

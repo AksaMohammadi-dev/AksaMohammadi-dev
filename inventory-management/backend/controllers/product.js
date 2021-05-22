@@ -43,7 +43,6 @@ exports.saveProduct = (req,res,next) => {
         vendor: req.body.vendor,
         category: req.body.categpry
     });
-    //console.log(product);
     product.save().then(createdProduct => {
         res.status(201).json({
         message: 'Product added successfully!!',

@@ -1,0 +1,164 @@
+<div>
+    <span class="material-icons" style="cursor: pointer; padding: 10px;" (click)="onAddPODetails()">
+       add
+    </span> Add Purchase Order Details 
+</div>
+<div *ngIf="editShow">
+    <form [formGroup]="addPOForm">
+        <table mdbTable  >
+            <tbody>
+            <th>
+                <span>productId</span>
+            </th>
+            <th>
+                <span>quantity</span>
+            </th>
+            <th>
+                <span>scheduledDate</span>
+            </th>
+            <th>
+                <span>status</span>
+            </th>
+            <th ></th>
+
+            <tr mdbTableCol>
+                
+                <td>
+                <select formControlName="prodId" [(ngModel)]="row.productId" ngModel class="form-control">
+                    <option *ngFor="let prod of products" value={{prod.number}}>
+                    {{prod.number}}</option>
+                </select>
+                </td>
+                <td>
+                <input  formControlName="prodQty" name="quantity" [(ngModel)]="row.quantity"/>
+                </td>
+                <td>
+                <mat-form-field>
+                    <input matInput
+                    [matDatepicker]="picker"
+                    placeholder="choose a Scheduled Date"
+                    (dateChange)="setDate($event.value)"
+                    formControlName="prodSchDate"
+                    [(ngModel)]="row.scheduledDate"
+                    >
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+                <!-- <input [(ngModel)]="PODetail.scheduledDate" name="scheduledDate" #scheduledDate="ngModel" /> -->
+                </td>
+                <td>
+                <input formControlName="prodStatus" name="status" [(ngModel)]="row.status"/>
+                </td> 
+                <td >
+                    <span style="cursor: pointer;" class="material-icons" (click) = "editRow(row._id)">
+                        done
+                    </span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </form>
+</div>
+
+<div *ngIf="addShow">
+    <form [formGroup]="addPOForm">
+        <table mdbTable  >
+            <tbody>
+            <th>
+                <span>productId</span>
+            </th>
+            <th>
+                <span>quantity</span>
+            </th>
+            <th>
+                <span>scheduledDate</span>
+            </th>
+            <th>
+                <span>status</span>
+            </th>
+            <th ></th>
+
+            <tr mdbTableCol>
+                <td>
+                <select formControlName="prodId"  ngModel class="form-control">
+                    <option *ngFor="let prod of products" value={{prod.number}}>
+                    {{prod.number}}</option>
+                </select>
+                </td>
+                <td>
+                <input  formControlName="prodQty" name="quantity"/>
+                </td>
+                <td>
+                <mat-form-field>
+                    <input matInput
+                    [matDatepicker]="picker"
+                    placeholder="choose a Scheduled Date"
+                    (dateChange)="setDate($event.value)"
+                    formControlName="prodSchDate"
+                    
+                    >
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+                <!-- <input [(ngModel)]="PODetail.scheduledDate" name="scheduledDate" #scheduledDate="ngModel" /> -->
+                </td>
+                <td>
+                <input formControlName="prodStatus" name="status" />
+                </td>
+                <td >
+                    <span style="cursor: pointer;" class="material-icons" (click) = "onSaveClientPO()">
+                        done
+                    </span>
+                </td> 
+            </tr>
+            </tbody>
+        </table>
+    </form>
+</div>
+<mat-table class="matTable" [dataSource]="dataSource">
+  
+    <ng-container matColumnDef="PO_num">
+      <mat-header-cell *matHeaderCellDef> PO num </mat-header-cell>
+      <mat-cell *matCellDef="let row"> {{po_num}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="scheduled_date">
+      <mat-header-cell *matHeaderCellDef> scheduled date </mat-header-cell>
+      <mat-cell *matCellDef="let row">{{row.scheduledDate}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="status">
+        <mat-header-cell *matHeaderCellDef> status </mat-header-cell>
+        <mat-cell *matCellDef="let row">{{row.status}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="productId">
+        <mat-header-cell *matHeaderCellDef> productId </mat-header-cell>
+        <mat-cell *matCellDef="let row">{{row.productId}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="quantity">
+        <mat-header-cell *matHeaderCellDef> quantity </mat-header-cell>
+        <mat-cell *matCellDef="let row">{{row.quantity}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="edit">
+        <mat-header-cell *matHeaderCellDef > edit </mat-header-cell>
+        <mat-cell *matCellDef="let row" >
+            <button color="primary"mat-raised-button (click)="editRecord(row)">Edit</button>
+        </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="delete">
+        <mat-header-cell *matHeaderCellDef > delete </mat-header-cell>
+        <mat-cell *matCellDef="let row" >
+            <button color="warn" mat-raised-button (click)="deleteRecord(row)">Delete</button>
+        </mat-cell>
+    </ng-container>
+
+  
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+  
+</mat-table>
+<mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>

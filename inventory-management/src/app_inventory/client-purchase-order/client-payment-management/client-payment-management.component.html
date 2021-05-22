@@ -1,0 +1,213 @@
+<!-- <mat-card> -->
+    <mat-spinner *ngIf="isLoading"></mat-spinner>
+    <div>
+      <label>Invoice number: </label>
+      <mat-form-field>
+        
+          <input title="PO number" [disabled]="true" matInput type="text" [(ngModel)]="invoice_no" >
+      </mat-form-field>
+    </div>
+    <div>
+        <label>client name: </label>
+        <mat-form-field appearance="outline">
+            <mat-label>choose client name</mat-label>
+            <mat-select [(ngModel)]="selected_id">
+            <mat-option *ngFor="let obj of clients" [value]="obj.id">
+                {{obj.name}}
+            </mat-option>
+            </mat-select>
+        </mat-form-field>     
+        <button (click)="getPO()">get POs</button>
+    </div>
+    <div *ngIf="ponumber.length > 0">
+        <label>Client PO number: </label>
+        <!-- <mat-form-field appearance="outline">
+            <mat-label>choose PO number</mat-label>
+            <mat-select [(ngModel)]="selected_po">
+            <mat-option *ngFor="let po of ponumber" [value]="po">
+                {{po}}
+            </mat-option>
+            </mat-select>
+        </mat-form-field>      -->
+        <mat-form-field>
+            <mat-select placeholder="Choose Purchase Number" [(value)]="selected_po" multiple>
+              <mat-option *ngFor="let po of ponumber" [value]="po.id">{{po.ponumber}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        <button (click)="getDetails()">get details</button>
+    </div>
+    <div *ngIf="noPO == true" >no po numbers found for the selected client...</div>
+    <!-- <div *ngIf="table == true"> -->
+        <!-- <div *ngIf="table">
+            <form [formGroup]="addPOForm">
+                <table mdbTable  >
+                    <tbody>
+                    <th>
+                        <span>productId</span>
+                    </th>
+                    <th>
+                        <span>quantity</span>
+                    </th>
+                    <th>
+                        <span>scheduledDate</span>
+                    </th>
+                    <th>
+                        <span>status</span>
+                    </th>
+                    <th ></th>
+        
+                    <tr mdbTableCol *ngFor="let row of rows">
+                        
+                        <td>
+                        <select formControlName="prodId" [(ngModel)]="row.productId" ngModel class="form-control">
+                            <option *ngFor="let prod of products" value={{prod.number}}>
+                            {{prod.number}}</option>
+                        </select>
+                        </td>
+                        <td>
+                        <input  formControlName="prodQty" name="quantity" [(ngModel)]="row.quantity"/>
+                        </td>
+                        <td>
+                        <mat-form-field>
+                            <input matInput
+                            [matDatepicker]="picker"
+                            placeholder="choose a Scheduled Date"
+                            (dateChange)="setDate($event.value)"
+                            formControlName="prodSchDate"
+                            [(ngModel)]="row.scheduledDate"
+                            >
+                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                            <mat-datepicker #picker></mat-datepicker>
+                        </mat-form-field>
+                        </td>
+                        <td>
+                        <input formControlName="prodStatus" name="status" [(ngModel)]="row.status"/>
+                        </td> 
+                        <td >
+                            <span style="cursor: pointer;" class="material-icons" (click) = "editRow(row._id)">
+                                done
+                            </span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </form>
+        </div> -->
+    <!-- </div> -->
+    <!-- <table mdbTable *ngIf="table == true" >
+      <thead>
+          <th>
+            <span>po_number</span>
+          </th>
+          <th>
+            <span>Total Amount</span>
+          </th>
+          <th>
+            <span>Vendor</span>
+          </th>
+          <th>
+            <span>Vendor1</span>
+          </th>
+          <th>
+            <span>Vendor2</span>
+          </th>
+          <th></th>
+        </thead>
+          <tbody *ngFor="let row of rows">
+          <tr mdbTableCol>
+            <td>
+              <input [(ngModel)]="row.clientPurchaseOrder.ponumber" name="invoiceno" #invoiceno="ngModel" />
+            </td>
+          </tr>
+          <tr *ngFor="let x of row.clientPurchaseOrderDetails">
+            <td>
+              <input [(ngModel)]="x.productId" name="totalamount" #totalamount="ngModel" />
+            </td>
+            <td>
+              <input [(ngModel)]="x.quantity" name="quantity" #quantity="ngModel" />
+            </td>
+            <td>
+              <input [(ngModel)]="x.scheduledDate" name="scheduledDate" #scheduledDate="ngModel" />
+            </td>
+            <td>
+              <input [(ngModel)]="x.status" name="status" #status="ngModel" />
+            </td>
+            <td>
+              <select [(ngModel)]="row.vendor" id="selectedVendor" name="selectedVendor" ngModel class="form-control">
+                <option *ngFor="let ven of vendors" value={{ven._id}}>
+                  {{ven.name}}</option>
+              </select>
+            </td>
+            <td>
+              <span  class="material-icons" style="cursor: pointer;" [routerLink]="['/edit-vendor-invoice', invoiceData.id]">
+                exposure
+              </span>        
+            </td>
+          </tr>
+        </tbody>
+      </table> -->
+
+      <!-- <div>
+        <button color="primary"mat-raised-button (click)="onSelect(course)" type="submit">save</button>
+      </div> -->
+      <table class="table table-hover table-striped">
+        <thead>
+          <tr>
+            <th>PO number</th>
+            <!-- <th>save</th> -->
+            <th>amount</th>
+            <!-- <th>invoiceNo</th> -->
+            <th>productId</th>
+            <th>scheduledDate</th>
+            <th>quantity</th>
+            <th>status</th>
+            <th>serialno</th>
+            <th>isInvoice</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let discipline of rows">
+            <tr>
+              <input [(ngModel)]="discipline.clientPurchaseOrder.ponumber" name="invoiceno" #invoiceno="ngModel" />
+            </tr>
+            <!-- <tr>
+              <button color="primary"mat-raised-button (click)="onSelect(course)" type="submit">save</button>
+            </tr> -->
+            
+            <tr *ngFor="let course of discipline.clientPurchaseOrderDetails">
+              <td>
+              </td>
+              <td><input [(ngModel)]="course.amount" name="amount" #amount="ngModel" /></td>
+              <td><input [(ngModel)]="course.productId" name="productId" #productId="ngModel" /></td>
+              <td><input [(ngModel)]="course.scheduledDate" name="scheduledDate" #scheduledDate="ngModel" /></td>
+              <td><input [(ngModel)]="course.quantity" name="quantity" #quantity="ngModel" /></td>
+              <td><input [(ngModel)]="course.status" name="status" #status="ngModel" /></td>
+               <td *ngIf="course.serialno.length > 0; else tpl1">
+                <input [(ngModel)]="course.serialno" name="serialno" #serialno="ngModel">
+              </td>
+                <ng-template #tpl1><td>
+                  <mat-select [(ngModel)]="course.selectedSerialnoDetails" name="selectedSerialnoDetails" #selectedSerialnoDetails="ngModel" multiple>
+                   <mat-option *ngFor="let obj of course.serialnoDetials" [value]="obj">
+                     {{obj.serialno}}</mat-option>
+                 </mat-select>
+               </td></ng-template>
+
+                
+              <td>
+                <input [(ngModel)]="course.isInvoiced" name="isInvoiced" #isInvoiced="ngModel" type="checkbox">
+              </td>
+              <!-- <td *ngIf="course.isInvoiced; else tpl"> -->
+              <td *ngIf="course.serialno.length <= 0; else tpl">
+                <button color="primary"mat-raised-button (click)="updateInvoice(course)" type="submit" >save</button>
+              </td>
+              <ng-template #tpl><td>
+                <!-- <button color="primary"mat-raised-button (click)="updateInvoice(course)" type="submit" disabled>save</button> -->
+              </td></ng-template>
+            </tr>
+          </ng-container>
+        </tbody>
+        
+        
+
+      </table>
+<!-- </mat-card> -->

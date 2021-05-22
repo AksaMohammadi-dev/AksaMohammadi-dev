@@ -4,7 +4,7 @@
   <mat-spinner *ngIf="isLoading"></mat-spinner>
   <form [formGroup]="form" (submit)="onSaveProduct()" *ngIf="!isLoading">
     <mat-form-field>
-      <input title="Product number" matInput type="text" formControlName="number">
+      <input title="Product number" [disabled]="true" matInput type="text" formControlName="number">
     </mat-form-field>
     <mat-error *ngIf="form.get('number').invalid">Please enter number</mat-error>
     <mat-form-field>

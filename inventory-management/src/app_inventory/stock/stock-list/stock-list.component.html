@@ -1,0 +1,13 @@
+
+<mat-spinner *ngIf="isLoading"></mat-spinner>
+<mat-accordion multi="true" *ngIf="stocks && stocks.length > 0  && !isLoading ">
+  <h4 >Stock Details : </h4>
+  <div *ngFor="let stock of stocks">
+    <ul>
+      <li>
+       Product description - {{stock.productDetails[0].description}} <br>
+       <a [routerLink]="['/get-stock-records', stock._id]">{{stock.quantity}}</a>
+      </li>
+    </ul>
+  </div>
+</mat-accordion>

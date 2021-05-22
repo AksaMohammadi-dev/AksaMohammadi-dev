@@ -12,6 +12,7 @@ const productScehma = new Schema({
   imagePath: { type: String, required: false },
   cgst: { type: String, required: true },
   sgst: { type: String, required: true },
+  // igst: { type: String },
   createdDate: {type: Date, required: false },
   modifiedDate: {type: Date, required: false },
   creator: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: false },

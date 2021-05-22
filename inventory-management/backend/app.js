@@ -7,6 +7,7 @@ const productsRoutes = require('./routes/products');
 const userRoutes = require('./routes/user');
 const vendorsRoutes = require('./routes/vendors');
 const clientsRoutes = require('./routes/clients');
+const stockRoutes = require('./routes/stock');
 const customerRoutes = require('./routes/customer');
 const employeeRoutes = require('./routes/employee');
 const vendorInvoiceRoutes = require('./routes/vendor-invoice');
@@ -14,6 +15,10 @@ const metaDataRoutes = require('./routes/meta-data');
 const categoryRoutes = require('./routes/category');
 const vendorPurchaseOrderRoutes = require('./routes/vendor-purchase-order');
 const vendorPaymentManagementRoutes = require('./routes/vendor-payment-management');
+const clientPurchaseOrderRoutes = require('./routes/client-purchase-order');
+const clientPurchaseOrderDetailRoutes = require('./routes/client-purchase-order-detail');
+const clientPaymentManagementRoutes = require('./routes/client-payment-management');
+
 
 const app = express();
 //const mongoUrl = "mongodb+srv://amey: " + process.env.MONGO_ATLAS_PW + "@cluster0-o10jq.mongodb.net/test?retryWrites=true&w=majority";
@@ -45,12 +50,16 @@ app.use("/api/user", userRoutes);
 app.use("/api/vendor", vendorsRoutes);
 app.use("/api/vendor-invoice", vendorInvoiceRoutes);
 app.use("/api/client", clientsRoutes);
+app.use("/api/stock", stockRoutes);
 app.use("/api/customer", customerRoutes);
 app.use("/api/employee", employeeRoutes);
 app.use("/api/category", categoryRoutes);
 app.use("/api/meta-data", metaDataRoutes);
 app.use("/api/vendor-purchase-order", vendorPurchaseOrderRoutes);
 app.use("/api/vendor-payment-management", vendorPaymentManagementRoutes);
+app.use("/api/client-purchase-order", clientPurchaseOrderRoutes);
+app.use("/api/client-purchase-order-detail", clientPurchaseOrderDetailRoutes);
+app.use("/api/client-payment-management", clientPaymentManagementRoutes);
 
 //code for single app
 app.use((req, res, next) => {

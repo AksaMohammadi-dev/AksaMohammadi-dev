@@ -2,7 +2,7 @@
   <button mat-button (click)="onAddInvoiceDetails()" routerLinkActive="mat-accent" color="primary">New Vendor Invoice</button>
 </div> -->
 
-<div *ngIf="userIsAuthenticated">
+<div *ngIf="userIsAuthenticated && ven == false">
   <span class="material-icons" style="cursor: pointer;" (click)="onAddInvoiceDetails()">
     add
     </span>
@@ -24,7 +24,7 @@
 </mat-accordion> -->
 <!-- <mat-paginator [length]="totalVendorInvoices" [pageSize]="vendorInvoicesPerPage" [pageSizeOptions]="pageSizeOptions" (page)="onChangePage($event)" *ngIf="vendorInvoices && vendorInvoices.length > 0"></mat-paginator> -->
 
-<table mdbTable *ngIf="vendorInvoices && vendorInvoices.length > 0">
+<table mdbTable *ngIf="vendorInvoices && vendorInvoices.length > 0 &&  ven == false && del == false; else elseBlock">
   <tbody *ngFor="let invoiceData of vendorInvoices">
     <th></th>
     <th>
@@ -39,11 +39,8 @@
     <th></th>
     <tr mdbTableCol>
       <td>
-        <span style="cursor: pointer;" class="material-icons" (click) = "onSaveVendorInvoice(invoiceData)">
-          done
-        </span>
         <span class="material-icons" style="cursor: pointer;" (click)="onDeleteInvoice(invoiceData)">
-          delete
+          delete....
         </span>
       </td>
       <td>
@@ -59,13 +56,48 @@
         </select>
       </td>
       <td>
-        <span class="material-icons" style="cursor: pointer;" [routerLink]="['/edit-vendor-invoice', invoiceData.id]">
+        <span  class="material-icons" style="cursor: pointer;" [routerLink]="['/edit-vendor-invoice', invoiceData.id]">
           exposure
-        </span>
-        
+        </span>        
       </td>
     </tr>
   </tbody>
 </table>
+<ng-template #elseBlock>
+<table mdbTable >
+  <tbody *ngFor="let invoiceData of vendorInvoices">
+    <th *ngIf="invoiceData.id == ''" ></th>
+    <th>
+      <span>Invoice No</span>
+    </th>
+    <th>
+      <span>Total Amount</span>
+    </th>
+    <th>
+      <span>Vendor</span>
+    </th>
+    <!-- <th></th> -->
+    <tr mdbTableCol>
+      <td *ngIf="invoiceData.id == ''" >
+        <span style="cursor: pointer;" class="material-icons" (click) = "onSaveVendorInvoice(invoiceData)">
+          done
+        </span>
+      </td>
+      <td>
+        <input [(ngModel)]="invoiceData.invoiceno" name="invoiceno" #invoiceno="ngModel" />
+      </td>
+      <td>
+        <input [(ngModel)]="invoiceData.totalamount" name="totalamount" #totalamount="ngModel" />
+      </td>
+      <td>
+        <select [(ngModel)]="invoiceData.vendor" id="selectedVendor" name="selectedVendor" ngModel class="form-control">
+          <option *ngFor="let ven of vendors" value={{ven._id}}>
+            {{ven.name}}</option>
+        </select>
+      </td>
+    </tr>
+  </tbody>
+</table>
+</ng-template>
 
 <p class="info-text mat-body-1" *ngIf="vendorInvoices.length == 0 && !isLoading">No Vendor Invoices found</p>

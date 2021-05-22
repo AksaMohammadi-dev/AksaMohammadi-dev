@@ -36,7 +36,7 @@ const checkAuth = require('../middleware/check-auth');
   checkAuth, 
   vendorController.deleteVendorInvoiceDetail);
 
-  router.delete("/vendor-invoice-product-detail-delete/:id",
+  router.post("/vendor-invoice-product-detail-delete",
   checkAuth, 
   vendorController.deleteVendorInvoiceProductDetail);
   

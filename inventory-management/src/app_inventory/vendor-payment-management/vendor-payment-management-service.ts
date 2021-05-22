@@ -43,12 +43,14 @@ export class VendorPaymentManagementService{
     }))
     .subscribe((transformedVendorPaymentManagementsData) => {
       this.vendorPaymentManagements = transformedVendorPaymentManagementsData.vendorPaymentManagement;
-
       this.vendorPaymentManagementsUpdate.next({
         vendorPaymentManagements: [...this.vendorPaymentManagements],
         vendorPaymentManagementCount: transformedVendorPaymentManagementsData.maxVendorPaymentManagement
       });
     });
+  }
+  getVenPaymentManagement() {
+    return this.http.get<{}>(BACKEND_URL + '/vendor-payment-management/vendor-payment-managements');
   }
 
   getVendorPaymentManagement(id: string) {

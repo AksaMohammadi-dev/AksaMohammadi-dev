@@ -4,6 +4,7 @@ const VendorInvoiceProductDetail = require('../models/vendor-invoice-product-det
 
 const Stock = require('../models/stock');
 const StockDetail = require('../models/stock-detail');
+const locations = require('../eventHandler/locations');
   
 exports.getAllVendorInvoices = (req, res, next) => {
     const pageSize = +req.query.pageSize;
@@ -11,9 +12,9 @@ exports.getAllVendorInvoices = (req, res, next) => {
     const vendorInvoiceQuery = VendorInvoice.find();
     let fetchedClients;
     if(pageSize && currentPage){
-        vendorInvoiceQuery
-        .skip(pageSize * (currentPage - 1))
-        .limit(pageSize);
+        // vendorInvoiceQuery
+        // .skip(pageSize * (currentPage - 1))
+        // .limit(pageSize);
     }
     vendorInvoiceQuery
         .then(documents => {
@@ -51,6 +52,7 @@ exports.saveVendorInvoice = (req,res,next) => {
     vendorInvoice.save().then(createdVendorInvoice => {
 
         res.status(201).json({
+        status: true,
         message: 'Vendor Invoice added successfully!!',
         vendorInvoice: {
             ...createdVendorInvoice,
@@ -91,23 +93,46 @@ exports.updateVendorInvoice = (req, res, next) => {
 }
 
 exports.deleteVendorInvoice = (req, res, next) => {
-
+    VendorInvoice.findById({_id:req.params.id}, function (err, docs) { 
+        if (err){ 
+            res.send({status:false,message:'something went wrong, mongo query error'}) 
+        } 
+        else{ 
+            if(docs && (docs != null || docs.length != 0)){
+                VendorInvoiceDetail.find({vendorinvoice:req.params.id}, function (err, docs) { 
+                    if (err){ 
+                        console.log(err);
+                    } 
+                    else{
+                        if(docs && (docs == null || docs.length == 0)){ 
+                             // there is no vendor invoice details for it
+                          //check for the invoiceprodouctdtails.?
+                          VendorInvoice.deleteOne({ _id: req.params.id, creator: req.userData.userId})
+                          .then(result => {
+                              if(result.n > 0){
+                              res.status(200).json({status:true, message: "Vendor Invoice deleted!!" });
+                              }
+                              else{
+                              res.status(401).json({message: "Not authorized!!"})
+                              }
+                              
+                          })
+                          .catch(error => {
+                              res.status(500).json({
+                              message: "Deleting a Vendor Invoice failed!!"
+                              })
+                          })
+                        }else{//it is having invoice details
+                            res.send({status:false,message:'something went wrong, vendor invoice details are present for this invoice, please delete those .'})
+                        }
+                    } 
+                })
+            }else{
+                res.send({status:false,message:'something went wrong, provided id is not found'})     
+            }
+        } 
+    });
     
-    VendorInvoice.deleteOne({ _id: req.params.id, creator: req.userData.userId})
-    .then(result => {
-        if(result.n > 0){
-        res.status(200).json({ message: "Vendor Invoice deleted!!" });
-        }
-        else{
-        res.status(401).json({message: "Not authorized!!"})
-        }
-        
-    })
-    .catch(error => {
-        res.status(500).json({
-        message: "Deleting a Vendor Invoice failed!!"
-        })
-    })
 }
 
 exports.getSingleVendorInvoice = (req, res, next) => {
@@ -147,25 +172,6 @@ async function getVendorInvoiceDetail(req, res, next) {
     
     res.status(200).json(vendorDetail);
 
-    // VendorInvoiceDetail.find({vendorinvoice: req.params.id}).then(vendorInvoice => {
-    //     console.log('xxxxx',vendorInvoice)
-    //     if(vendorInvoice){
-    //         for (let invoiceDetailCnt = 0; invoiceDetailCnt < vendorInvoice; invoiceDetailCnt++) {
-    //             let stockDetail = await getProductStock(vendorInvoice[invoiceDetailCnt])
-    //             console.log('xxxxx',stockDetail)
-    //         }
-            
-    //         res.status(200).json(vendorInvoice);
-    //     }
-    //     else{
-    //     res.status(404).json({message: "Error occurred!!"});
-    //     }
-    // })
-    // .catch(error => {
-    //     res.status(500).json({
-    //     message: "Fetching Vendor Invoice Detail failed!!"
-    //     })
-    // });
 }
 
 async function getProductStock(vendorDetail) {
@@ -206,6 +212,7 @@ exports.saveVendorInvoiceDetail = (req,res,next) => {
                 }).then(result => {
 
                     res.status(201).json({
+                        status: true,
                         message: 'Vendor Invoice Detail added successfully!!',
                         vendorInvoice: {
                             ...createdVendorInvoiceDetail,
@@ -226,6 +233,7 @@ exports.saveVendorInvoiceDetail = (req,res,next) => {
                 stock.save().then(savedStockData => {
 
                     res.status(201).json({
+                        status: true,
                         message: 'Vendor Invoice Detail added successfully!!',
                         vendorInvoice: {
                             ...createdVendorInvoiceDetail,
@@ -284,22 +292,43 @@ exports.updateVendorInvoiceDetail = (req, res, next) => {
 }
 
 exports.deleteVendorInvoiceDetail = (req, res, next) => {
-
-    VendorInvoiceDetail.deleteOne({ _id: req.params.id, creator: req.userData.userId})
-    .then(result => {
-        if(result.n > 0){
-        res.status(200).json({ message: "Vendor Invoice Detail deleted!!" });
+    VendorInvoiceDetail.findById({_id:req.params.id}, function (err, docs) { 
+        if (err){ 
+            console.log(err); 
+        } 
+        else{ 
+            if(docs != null || (docs && docs.length != 0)){
+                VendorInvoiceProductDetail.find({vendorinvoicedetail:req.params.id}, function (err, docs) { 
+                    if (err){ 
+                        console.log(err); 
+                    }
+                    else{
+                        if(docs == null || docs.length == 0){
+                            VendorInvoiceDetail.deleteOne({ _id: req.params.id, creator: req.userData.userId}).then(result => {
+                                if(result.n > 0){
+                                res.status(200).json({status:true, message: "Vendor Invoice Detail deleted!!" });
+                                }
+                                else{
+                                res.status(401).json({message: "Not authorized!!"})
+                                }
+                                
+                            })
+                            .catch(error => {
+                                res.status(500).json({
+                                message: "Deleting a Vendor Invoice Detail failed!!"
+                                })
+                            })
+                        }else{
+                            res.send({status:false,message:'something went wrong, vendor invoice product details are present for this invoice details, please delete those .'}) 
+                        }
+                    }
+                })
+            }else{
+                res.send({status:false,message:'something went wrong, provided id is not found'})
+            }
         }
-        else{
-        res.status(401).json({message: "Not authorized!!"})
-        }
-        
-    })
-    .catch(error => {
-        res.status(500).json({
-        message: "Deleting a Vendor Invoice Detail failed!!"
-        })
-    })
+    }); 
+   
 }
 
 exports.getSingleVendorInvoiceDetail = (req, res, next) => {
@@ -350,19 +379,26 @@ exports.getAllVendorInvoiceProductDetail = (req, res, next) => {
 }
 
 exports.saveVendorInvoiceProductDetail = (req,res,next) => {
-    
+    let sublocObj;
+    let locObj;
+    if(req.body.subloc){
+        sublocObj = locations.sublocation.find(obj => obj.id == req.body.subloc);
+    }
+    if(req.body.loc){
+         locObj = locations.location.find(obj => obj.id == req.body.loc);
+    }
     const vendorInvoiceProductDetail = new VendorInvoiceProductDetail({
         serialno: req.body.serialno,
-        subloc: req.body.subloc,
-        loc: req.body.loc,
+        subloc: sublocObj.name,
+        loc: locObj.name,
         creator: req.userData.userId,
         vendorinvoicedetail: req.body.vendorinvoicedetail
     });
 
     const stockDetail = new StockDetail({
         serialno: req.body.serialno,
-        subloc: req.body.subloc,
-        loc: req.body.loc,
+        subloc: sublocObj.name,
+        loc: locObj.name,
         creator: req.userData.userId,
         stock: req.body.stockId,
         createdDate: new Date()
@@ -372,6 +408,7 @@ exports.saveVendorInvoiceProductDetail = (req,res,next) => {
 
         stockDetail.save().then(stockDetailsData => {
             res.status(201).json({
+                status: true,
                 message: 'Vendor Invoice Product Detail added successfully!!',
                 vendorInvoiceDetail: {
                     ...createdVendorInvoiceProductDetail,
@@ -416,22 +453,147 @@ exports.updateVendorInvoiceProductDetail = (req, res, next) => {
 }
 
 exports.deleteVendorInvoiceProductDetail = (req, res, next) => {
+    var idArray = req.body.selectedArray.map(function (el) { return el.id; });
+    var serialnoArray = req.body.selectedArray.map(function (el) { return el.serialno; });
+    VendorInvoiceProductDetail.deleteMany( { _id : { $in : idArray } } ).then(productDelete => {
+        if(productDelete.deletedCount >0){
+            VendorInvoiceDetail.findOneAndUpdate({_id:req.body.selectedArray[0].vendorinvoicedetail},{ $inc: { quantity: -productDelete.deletedCount }},{ returnOriginal: false }).then(updatedVendInvoice => {
+                if(updatedVendInvoice && updatedVendInvoice.product){
+                    if(updatedVendInvoice.quantity <= 1){//because quantity is giving 1 not 0
+                        VendorInvoiceDetail.deleteOne({_id:req.body.selectedArray[0].vendorinvoicedetail})
+                        .then(resultDel => {
+                            console.log('veninvoice_deletedstock ',resultDel)
+                        })
+                    }
+                    Stock.findOneAndUpdate( {product:req.body.prodDetials.product},{ $inc: { quantity: -productDelete.deletedCount }},{returnOriginal: false }).then(updatedStock => {
+                        if(updatedStock && updatedStock._id){
+                            if(updatedStock.quantity <= 0){//because quantity is giving 1 not 0
+                                Stock.deleteOne({product:req.body.prodDetials.product})
+                                .then(resultDel => {
+                                    console.log('deletedstock ',resultDel)
+                                })
+                            }
+                            StockDetail.deleteMany({ serialno : { $in : serialnoArray } , stock: updatedStock._id }).then(result => {
+                                if(result.deletedCount > 0){
+                                    res.status(200).json({status:true, message: "vendor invoice product details is deleted successfuly" });
+                                }else{
+                                    res.status(400).json({status:false, message: "no records found in stock detials to delete" });
+                                }
+                            }).catch(error => {
+                                res.status(500).json({
+                                message: "Deleting a Stock Detail failed!!"
+                                })
+                            })
+                        }else{
+                            res.status(400).json({status:false, message: "Error occurred while updating stock quantity" });
+                        }
+                    }).catch(error => {
+                        res.status(500).json({
+                        message: "updating stock quantity failed!!"
+                        })
+                    })
 
-    VendorInvoiceProductDetail.deleteOne({ _id: req.params.id, creator: req.userData.userId})
-    .then(result => {
-        if(result.n > 0){
-        res.status(200).json({ message: "Vendor Invoice Product Detail deleted!!" });
+                }else{
+                    res.status(400).json({status:false, message: "Error occurred while updating vendor invoice quantity" });
+                }
+            }).catch(error => {
+                res.status(500).json({
+                message: "Deleting a Product Detail failed!!"
+                })
+            })
+        }else{
+            res.status(400).json({status:false, message: "no records found in vendor invoice product detials to delete" });
         }
-        else{
-        res.status(401).json({message: "Not authorized!!"})
-        }
-        
-    })
-    .catch(error => {
+    }).catch(error => {
         res.status(500).json({
         message: "Deleting a Vendor Invoice Product Detail failed!!"
         })
     })
+    // VendorInvoiceProductDetail.findById(req.params.id).then(productDetails => {
+    //     if(productDetails){
+    //         let serialno = productDetails.serialno
+    //         let subloc = productDetails.subloc
+    //         let loc = productDetails.loc
+    //         if(productDetails.vendorinvoicedetail && productDetails.serialno){
+    //             VendorInvoiceProductDetail.deleteOne({ _id: req.params.id, creator: req.userData.userId})
+    //             .then(result => {
+    //                 if(result.n > 0){
+    //                     res.status(200).json({status:true, message: "Vendor Invoice Product Detail deleted!!" });
+    //                 }
+    //                 else{
+    //                     res.status(401).json({message: "no record found for the provided vendor invoice product details id"})
+    //                 }
+                    
+    //             })
+    //             .catch(error => {
+    //                 res.status(500).json({
+    //                 message: "Deleting a Vendor Invoice Product Detail failed!!"
+    //                 })
+    //             })
+    //             VendorInvoiceDetail.findOneAndUpdate({_id:productDetails.vendorinvoicedetail},{ $inc: { quantity: -1 }},{ returnOriginal: false }).then(vendInvoicQuantity => {
+    //                 if(vendInvoicQuantity && vendInvoicQuantity.product){
+    //                         if(vendInvoicQuantity.quantity <= 1){//because quantity is giving 1 not 0
+    //                             VendorInvoiceDetail.deleteOne({_id:productDetails.vendorinvoicedetail})
+    //                             .then(resultDel => {
+    //                                 console.log('veninvoice_deletedstock ',resultDel)
+    //                             })
+    //                         }
+    //                     Stock.findOneAndUpdate( {product:vendInvoicQuantity.product},{ $inc: { quantity: -1 }},{returnOriginal: false }).then(stock => {
+    //                         if(stock && stock._id){
+    //                             if(stock.quantity <= 0){//because quantity is giving 1 not 0
+    //                                 Stock.deleteOne({product:vendInvoicQuantity.product})
+    //                                 .then(resultDel => {
+    //                                     console.log('%%%%%%%%%%deletedstock ',resultDel)
+    //                                 })
+    //                             }
+    //                             console.log('%%%%%%%%%%55 ',stock.quantity,stock._id,serialno,req.userData.userId,{ stock: stock._id ,serialno:serialno,creator: req.body.creator,subloc,loc})
+    //                             StockDetail.deleteOne({ stock: stock._id ,serialno:serialno,subloc:subloc,loc:loc})
+    //                             .then(result => {
+    //                                 console.log('*********8 ',result,result.n)
+    //                                 if(result.n > 0){
+    //                                     console.log('res.status(200).json({status:true, message: "stock details is deleted successfuly" });')
+    //                                 }
+    //                                 else{
+    //                                     console.log('res.status(401).json({message: "something went wrong, while deleting stock details"})')
+    //                                 }
+    //                             })
+    //                         }else{
+    //                             console.log('res.status(404).json({message: "Error occurred, no stocks found for the provided id"});')
+    //                         }
+    //                     })
+    //                 }else{
+    //                     console.log('res.status(404).json({message: "Error occurred, no vendor invoices found for the provided id"});')
+    //                 }
+    //             })
+    //         }else{
+    //             res.status(404).json({message: "Error occurred, no product detail found for the provided id"}); 
+    //         }
+    //     }
+    //     else{
+    //         res.status(404).json({message: "Error occurred, no data foound for the provided id"});
+    //     }
+    // })
+    // .catch(error => {
+    //     res.status(500).json({
+    //     message: "Fetching Vendor Invoice Product Detail failed!!"
+    //     })
+    // });
+    // VendorInvoiceProductDetail.deleteOne({ _id: req.params.id, creator: req.userData.userId})
+    // .then(result => {
+    //     console.log('********* ',result)
+    //     if(result.n > 0){
+    //     res.status(200).json({ message: "Vendor Invoice Product Detail deleted!!" });
+    //     }
+    //     else{
+    //     res.status(401).json({message: "!!!!!!!Not authorized!!"})
+    //     }
+        
+    // })
+    // .catch(error => {
+    //     res.status(500).json({
+    //     message: "Deleting a Vendor Invoice Product Detail failed!!"
+    //     })
+    // })
 }
 
 exports.getSingleVendorInvoiceProductDetail = (req, res, next) => {

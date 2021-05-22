@@ -1,0 +1,21 @@
+<div *ngIf="userIsAuthenticated">
+  <button mat-button routerLink="/client-purchase-order" routerLinkActive="mat-accent" color="primary">New Client Purchase Order</button>
+  <button mat-button (click)="showPOFn()" routerLinkActive="mat-accent" color="primary">View Client Purchase Order</button>
+  <button mat-button routerLink="/client-payment-management/invoice" routerLinkActive="mat-accent" color="primary">Client Invoice</button>
+  <button mat-button routerLink="/client-payment-management/payment" routerLinkActive="mat-accent" color="primary">Client Payment Management</button>
+</div>
+  <mat-spinner *ngIf="isLoading"></mat-spinner>
+  <div *ngIf="showPO">
+    <div multi="true" class="poDiv" *ngIf="clientsPO && clientsPO.length > 0 && !isLoading">
+      <div *ngFor="let PO of clientsPO" style="padding: 10px;">
+          {{PO.ponumber}}
+          <a mat-button color="primary" style="float: right;" [routerLink]="['/edit-client-purchase-order', PO._id]">EDIT</a>
+          <button mat-button color="warn" style="float: right;" (click)="onDelete(PO._id)">DELETE</button>
+      </div>
+    </div>
+    <mat-paginator [length]="totalClientsPO" [pageSize]="clientsPOPerPage" [pageSizeOptions]="pageSizeOptions" (page)="onChangePage($event)" *ngIf="clientsPO && clientsPO.length > 0"></mat-paginator> 
+    <p class="info-text mat-body-1" *ngIf="clientsPO.length == 0 && !isLoading">No clients purchase order is found</p>
+  
+  </div>
+  
+  

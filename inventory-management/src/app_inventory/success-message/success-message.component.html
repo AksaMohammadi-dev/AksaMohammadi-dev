@@ -1,0 +1,41 @@
+<ng-container *ngIf="delete;else second">
+    <h1 mat-dialog-title>Successfully deleted</h1>
+    <div  mat-dialog-content>
+        <p>{{data.message}}</p>
+    </div>
+    <div mat-dialog-actions>
+        <button mat-button mat-dialog-close>Ok</button>
+    </div>
+</ng-container>
+<ng-template #second>
+    <ng-container *ngIf="create;else third">
+        <h1 mat-dialog-title>Successfully created</h1>
+        <div  mat-dialog-content>
+            <p>{{data.message}}</p>
+        </div>
+        <div mat-dialog-actions>
+            <button mat-button mat-dialog-close>Ok</button>
+        </div>
+    </ng-container>
+</ng-template>
+<ng-template #third>
+    <ng-container *ngIf="edit;else fourth">
+        <h1 mat-dialog-title>Alert Message</h1>
+        <div  mat-dialog-content>
+            <p>{{data.message}}</p>
+        </div>
+        <div mat-dialog-actions>
+            <button mat-button mat-dialog-close class="btn btn-primary" (click)="editRecord()">Edit</button>
+            <button mat-button mat-dialog-close class="btn">Cancel</button>
+        </div>
+    </ng-container>
+</ng-template>
+<ng-template #fourth>
+    <h1 mat-dialog-title>Something went wrong</h1>
+    <div  mat-dialog-content>
+        <p>{{data.message}}</p>
+    </div>
+    <div mat-dialog-actions>
+        <button mat-button mat-dialog-close>Ok</button>
+    </div>
+</ng-template>

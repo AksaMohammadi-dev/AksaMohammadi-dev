@@ -1,0 +1,21 @@
+mat-table{
+    width: 120%;
+}
+mat-cell, mat-footer-cell, mat-header-cell {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    word-wrap: break-word;
+    min-height: inherit;
+    padding-right: 41px;
+    padding: 8px 8px 8px 8px;
+}
+
+mat-cell, mat-footer-cell, mat-header-cell {
+    flex: 1;
+    /* display: flex; */
+    /* align-items: center; */
+    /* overflow: hidden; */
+    /* word-wrap: break-word; */
+    /* min-height: inherit; */
+}

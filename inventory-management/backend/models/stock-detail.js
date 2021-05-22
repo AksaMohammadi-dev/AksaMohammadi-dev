@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const stockDetailScehma = new Schema({
   id: { type: mongoose.SchemaTypes.ObjectId },
-  serialno: { type: String, required: true },
+  serialno: { type: String, required: true ,unique:true},
   subloc: { type: String, required: true },
   loc: { type: String, required: true },  
   creator: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: false },

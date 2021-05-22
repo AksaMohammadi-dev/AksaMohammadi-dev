@@ -3,8 +3,9 @@ const Client = require('../models/client');
 const Categories = require('../models/category')
 const Product = require('../models/product')
 const VendorPurchaseOurder = require('../models/vendor-purchase-order')
+const ClientPurchaseOrder = require('../models/client-purchase-order')
 const VendorInvoice = require('../models/vendor-invoice')
-  
+const locationsEventHandler = require('../eventHandler/locations')
 async function getMetaData (req, res, next) {
    
     try {
@@ -15,6 +16,7 @@ async function getMetaData (req, res, next) {
         let categoryRes;
         let productsRes;
         let vendorPOCntRes;
+        let clientPOCntRes;
 
         vendorsRes = await getVendors(req, res, next)
         clientsRes = await getClients(req, res, next)
@@ -23,6 +25,8 @@ async function getMetaData (req, res, next) {
         categoryRes = await getCategory(req, res, next)
         productsRes = await getProducts(req, res, next);
         vendorPOCntRes = await getVendorPurchaseOrderCount(req, res, next);
+        productCntRes = await getProductCount(req, res, next);
+        clientPOCntRes = await getClientPurchaseOrderCount(req, res, next);
 
         res.json({ 
             vendors: vendorsRes, 
@@ -31,7 +35,9 @@ async function getMetaData (req, res, next) {
             locs: locsRes,
             categories: categoryRes,
             products: productsRes,
-            vendorPOCnt: vendorPOCntRes
+            vendorPOCnt: vendorPOCntRes,
+            clientPOCnt: clientPOCntRes,
+            productCnt : productCntRes
         })
       }
       catch(error) {
@@ -91,6 +97,12 @@ async function getVendorPurchaseOrder(req, res, next) {
     return vendorPOQuery;
 }
 
+// async function getclientPurchaseOrder(req, res, next) {
+
+//     const clientPOQuery = ClientPurchaseOrder.find();
+//     return clientPOQuery;
+// }
+
 async function getVendorInvoice(req, res, next) {
 
     const vendorInvoiceQuery = VendorInvoice.find();
@@ -103,30 +115,26 @@ async function getVendorPurchaseOrderCount(req, res, next) {
     return vendorPOQuery;
 }
 
+async function getClientPurchaseOrderCount(req, res, next) {
+
+    const clientPOQuery = ClientPurchaseOrder.countDocuments();
+    return clientPOQuery;
+}
+async function getProductCount(req, res, next) {
+
+    const productQuery = Product.countDocuments();
+    return productQuery;
+}
+
 async function getLocations(req, res, next) {
 
-    const locs = [{
-        id: '1',
-        name: 'loc 1'
-    },
-    {
-        id: '2',
-        name: 'loc 2'
-    }]
-
+    const locs = locationsEventHandler.location;
     return locs;
 }
 
 async function getSubLocations(req, res, next) {
 
-    const subLocs = [{
-        id: '1',
-        name: 'subLoc 1'
-    },
-    {
-        id: '2',
-        name: 'subLoc 2'
-    }]
+    const subLocs = locationsEventHandler.sublocation;
 
     return subLocs;
 }

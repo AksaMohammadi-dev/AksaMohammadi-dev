@@ -36,7 +36,6 @@ exports.saveVendor = (req,res,next) => {
         creator: req.userData.userId,
         createdDate: Date.now()
     });
-    //console.log(vendor);
     vendor.save().then(createdVendor => {
         res.status(201).json({
         message: 'Vendor added successfully!!',

@@ -6,6 +6,9 @@
       <a mat-button routerLink="/list-client" routerLinkActive="mat-accent">Clients</a>
     </li> 
     <li *ngIf="userIsAuthenticated">
+      <a mat-button routerLink="/list-client-purchase-order" routerLinkActive="mat-accent">Client Purchase Order</a>
+    </li> 
+    <li *ngIf="userIsAuthenticated">
       <a mat-button routerLink="/list-vendor" routerLinkActive="mat-accent">Vendors</a>
     </li>
     <li *ngIf="userIsAuthenticated">
@@ -18,10 +21,16 @@
       <a mat-button routerLink="/list-vendor-payment-management" routerLinkActive="mat-accent">Vendors Payment</a>
     </li>
     <li *ngIf="userIsAuthenticated">
+      <a mat-button routerLink="/list-stock" routerLinkActive="mat-accent">Stocks</a>
+    </li>
+    <li *ngIf="userIsAuthenticated">
       <a mat-button routerLink="/list-product" routerLinkActive="mat-accent">Products</a>
     </li>
     <li *ngIf="userIsAuthenticated">
       <a mat-button routerLink="/list-category" routerLinkActive="mat-accent">Category</a>
+    </li>
+    <li *ngIf="userIsAuthenticated">
+      <a mat-button routerLink="/reports" routerLinkActive="mat-accent">Reports</a>
     </li>
     <li *ngIf="!userIsAuthenticated">
       <a mat-button routerLink="/auth/login" routerLinkActive="mat-accent">Login</a>

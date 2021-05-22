@@ -5,7 +5,7 @@
 <mat-accordion multi="true" *ngIf="vendorPaymentManagements && vendorPaymentManagements.length > 0 && !isLoading">
   <mat-expansion-panel *ngFor="let vendorPaymentManagement of vendorPaymentManagements">
     <mat-expansion-panel-header>
-      {{vendorPaymentManagement.name}}
+      {{vendorPaymentManagement.invoicenumber}}
     </mat-expansion-panel-header>
     
     <mat-action-row *ngIf="userIsAuthenticated && userId === vendorPaymentManagement.creator">

@@ -2,12 +2,12 @@
 <mat-card>
   
   <mat-spinner *ngIf="isLoading"></mat-spinner>
-  <div>
+  <div *ngIf="ven == false">
     <span class="material-icons" style="cursor: pointer;" (click)="onAddInvoiceDetails()">
       add
       </span>
   </div>
-  <table mdbTable *ngIf="invoiceDetails && invoiceDetails.length > 0">
+  <table mdbTable *ngIf="invoiceDetails && invoiceDetails.length > 0 &&  ven == false && del == false; else elseBlock">
     <th></th>
       <th>
         <span>Quantity</span>
@@ -21,9 +21,7 @@
       
       <tr mdbTableCol>
         <td>
-          <span style="cursor: pointer;" class="material-icons" (click)="onSaveInvoiceDetails(invoiceData)">
-            done
-          </span>
+        
           <span class="material-icons" style="cursor: pointer;" (click)="onDeleteVendorInvoiceDetails(invoiceData)">
             delete
           </span>
@@ -48,87 +46,97 @@
         </td>
         <td>
           <table *ngIf="invoiceData.viewVendorInvoiceProductDetail && invoiceData.vendorInvoiceProductDetail && invoiceData.vendorInvoiceProductDetail.length > 0">
+            <div *ngIf="delShow" style="float: right;">
+              <button mat-raised-button style="margin-left: 315p;" (click)="deleteSelected(invoiceData)">Delete</button>
+            </div>
             <tbody *ngFor="let vendorInvoiceProductDetail of invoiceData.vendorInvoiceProductDetail">
               <td>
-                <span style="cursor: pointer;" class="material-icons" (click)="onSaveInvoiceProductDetails(vendorInvoiceProductDetail, invoiceData.id, invoiceData.stockId)">
-                  done
-                </span>
-                <span class="material-icons" style="cursor: pointer;" (click)="onDeleteVendorInvoiceProductDetails(vendorInvoiceProductDetail, invoiceData)">
-                  delete
-                </span>
+               
+                <input type="checkbox" name="myTextEditBox" value="checked" (change)='onSelect($event,vendorInvoiceProductDetail,invoiceData)'/>
+               
               </td>
               <td>
                 <input [(ngModel)]="vendorInvoiceProductDetail.serialno" title="Serial No" name="serialno" #serialno="ngModel" />
               </td>
               <td>
-                <select [(ngModel)]="vendorInvoiceProductDetail.subLoc" ngModel class="form-control">
-                  <option *ngFor="let subLoc of subLocations" value={{subLoc.id}}>
-                    {{subLoc.name}}</option>
-                </select>
+                <input [(ngModel)]="vendorInvoiceProductDetail.subLoc" title="Sub Loc" name="subLoc" #subLoc="ngModel" />
+              
               </td>
               <td>
-                <select [(ngModel)]="vendorInvoiceProductDetail.loc" ngModel class="form-control">
-                  <option *ngFor="let loc of locations" value={{loc.id}}>
-                    {{loc.name}}</option>
-                </select>
+                <input [(ngModel)]="vendorInvoiceProductDetail.loc" title="loc" name="loc" #loc="ngModel" />
+                
               </td>
             </tbody>
           </table>
         </td>
       </tr>
-      <tr>
-        <!-- <td>
-          <table *ngIf="invoiceData.viewVendorInvoiceProductDetail && invoiceData.vendorInvoiceProductDetail && invoiceData.vendorInvoiceProductDetail.length > 0">
-            <tbody *ngFor="let vendorInvoiceProductDetail of invoiceData.vendorInvoiceProductDetail">
-              <td>
-                <span style="cursor: pointer;" class="material-icons" (click)="onSaveInvoiceProductDetails(vendorInvoiceProductDetail, invoiceData.id)">
-                  done
-                </span>
-              </td>
-              <td>
-                <input [(ngModel)]="vendorInvoiceProductDetail.serialno" title="Serial No" name="serialno" #serialno="ngModel" />
-              </td>
-              <td>
-                <select [(ngModel)]="vendorInvoiceProductDetail.subLoc" ngModel class="form-control">
-                  <option *ngFor="let subLoc of subLocations" value={{subLoc.id}}>
-                    {{subLoc.name}}</option>
-                </select>
-              </td>
-              <td>
-                <select [(ngModel)]="vendorInvoiceProductDetail.loc" ngModel class="form-control">
-                  <option *ngFor="let loc of locations" value={{loc.id}}>
-                    {{loc.name}}</option>
-                </select>
-              </td>
-            </tbody>
-          </table>
-        </td> -->
-      </tr>
+    </tbody>
+  </table>
 
-      <!-- <tr *ngIf="invoiceData.viewVendorInvoiceProductDetail && invoiceData.vendorInvoiceProductDetail && invoiceData.vendorInvoiceProductDetail.length > 0"
-        *ngFor="let vendorInvoiceProductDetail of invoiceData.vendorInvoiceProductDetail">
-        <td>
-          <span style="cursor: pointer;" class="material-icons" (click)="onSaveInvoiceProductDetails(vendorInvoiceProductDetail, invoiceData.id)">
+  <ng-template #elseBlock>
+    <table mdbTable >
+      <tbody *ngFor="let invoiceData of invoiceDetails">
+
+      <th *ngIf="invoiceData.id == ''" ></th>
+      <th>
+        <span>Quantity</span>
+      </th>
+      <th>
+        <span>Product</span>
+      </th>
+      
+      <tr mdbTableCol>
+        <td *ngIf="invoiceData.id == ''" >
+          <span style="cursor: pointer;" class="material-icons" (click)="onSaveInvoiceDetails(invoiceData)">
             done
           </span>
         </td>
         <td>
-          <input [(ngModel)]="vendorInvoiceProductDetail.serialno" title="Serial No" name="serialno" #serialno="ngModel" />
+          <input [(ngModel)]="invoiceData.quantity" name="qty" #qty="ngModel" />
         </td>
         <td>
-          <select [(ngModel)]="vendorInvoiceProductDetail.subLoc" ngModel class="form-control">
-            <option *ngFor="let subLoc of subLocations" value={{subLoc.id}}>
-              {{subLoc.name}}</option>
+          <select [(ngModel)]="invoiceData.product" ngModel class="form-control">
+            <option *ngFor="let prod of products" value={{prod._id}}>
+              {{prod.number}}</option>
           </select>
+        </td>
+        <td>            
         </td>
         <td>
-          <select [(ngModel)]="vendorInvoiceProductDetail.loc" ngModel class="form-control">
-            <option *ngFor="let loc of locations" value={{loc.id}}>
-              {{loc.name}}</option>
-          </select>
+          <table *ngIf="invoiceData.viewVendorInvoiceProductDetail && invoiceData.vendorInvoiceProductDetail && invoiceData.vendorInvoiceProductDetail.length > 0">
+            <tbody *ngFor="let vendorInvoiceProductDetail of invoiceData.vendorInvoiceProductDetail">
+              <td *ngIf="vendorInvoiceProductDetail.id == ''">
+                <span style="cursor: pointer;" class="material-icons" (click)="onSaveInvoiceProductDetails(vendorInvoiceProductDetail, invoiceData.id, invoiceData.stockId)">
+                  done
+                </span>
+              </td>
+              <td>
+                <input [(ngModel)]="vendorInvoiceProductDetail.serialno" title="Serial No" name="serialno" #serialno="ngModel" />
+              </td>
+              <td *ngIf="vendorInvoiceProductDetail.id == ''; else sublocCondition">
+                <select [(ngModel)]="vendorInvoiceProductDetail.subLoc" ngModel class="form-control">
+                  <option *ngFor="let subLoc of subLocations" value={{subLoc.id}}>
+                    {{subLoc.name}}</option>
+                </select>
+              </td>
+              <ng-template #sublocCondition><td>
+                  <input [(ngModel)]="vendorInvoiceProductDetail.subLoc" title="Sub Loc" name="subLoc" #subLoc="ngModel" />
+              </td></ng-template>
+              <td *ngIf="vendorInvoiceProductDetail.id == ''; else locCondition">
+                <select [(ngModel)]="vendorInvoiceProductDetail.loc" ngModel class="form-control">
+                  <option *ngFor="let loc of locations" value={{loc.id}}>
+                    {{loc.name}}</option>
+                </select>
+              </td>
+              <ng-template #locCondition><td>
+                  <input [(ngModel)]="vendorInvoiceProductDetail.loc" title="Loc" name="loc" #loc="ngModel" />
+              </td></ng-template>
+            </tbody>
+          </table>
         </td>
-      </tr> -->
+      </tr>
     </tbody>
-  </table>
+    </table>
+  </ng-template>
 
 </mat-card> 

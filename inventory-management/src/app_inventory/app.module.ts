@@ -21,16 +21,41 @@ import { FlashMessagesModule } from 'angular2-flash-messages';
 import { CategorysModule } from './category/category.module';
 import { VendorPurchaseOrdersModule } from './vendor-purchase-order/vendor-purchase-orders.module';
 import { VendorPaymentManagementModule } from './vendor-payment-management/vendor-payment-management.module';
+import { SuccessMessageComponent } from './success-message/success-message.component';
+import { StockListComponent } from './stock/stock-list/stock-list.component';
+import { StockCreateComponent } from './stock/stock-create/stock-create.component';
+import { MatCheckboxModule } from '@angular/material';
+import { CreateClientPurchaseOrderComponent } from './client-purchase-order/create-client-purchase-order/create-client-purchase-order.component';
+import { ListClientPurchaseOrderComponent } from './client-purchase-order/list-client-purchase-order/list-client-purchase-order.component';
+import { EditClientPurchaseOrderComponent } from './client-purchase-order/edit-client-purchase-order/edit-client-purchase-order.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ClientPaymentManagementComponent } from './client-purchase-order/client-payment-management/client-payment-management.component';
+import { ReportsComponent } from './reports/reports/reports.component';
+import { ClientPaymentComponent } from './client-purchase-order/client-payment/client-payment.component';
+import { MatTableExporterModule } from 'mat-table-exporter';
 
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
     ErrorComponent,
-    HomeComponent
+    HomeComponent,
+    SuccessMessageComponent,
+    StockListComponent,
+    StockCreateComponent,
+    CreateClientPurchaseOrderComponent,
+    ListClientPurchaseOrderComponent,
+    EditClientPurchaseOrderComponent,
+    ClientPaymentManagementComponent,
+    ReportsComponent,
+    ClientPaymentComponent
   ],
   imports: [
+    ReactiveFormsModule,
+    FormsModule,
+    MatTableExporterModule,
     BrowserModule,
+    MatCheckboxModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     HttpClientModule,
@@ -57,6 +82,6 @@ import { VendorPaymentManagementModule } from './vendor-payment-management/vendo
     }
   ],
   bootstrap: [AppComponent],
-  entryComponents: [ErrorComponent]
+  entryComponents: [ErrorComponent,SuccessMessageComponent]
 })
 export class AppModule { }

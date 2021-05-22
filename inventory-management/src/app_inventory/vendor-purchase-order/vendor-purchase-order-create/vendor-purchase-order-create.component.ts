@@ -59,7 +59,6 @@ export class VendorPurchaseOrderCreateComponent implements OnInit, OnDestroy {
           this.isLoading = true;
           this.vendorPurchaseOrderService.getVendorPurchaseOrder(this.vendorPurchaseOrderId)
           .subscribe(vendorPurchaseOrderData => {
-            console.log('nnnnn',vendorPurchaseOrderData)
             this.isLoading = false;
             this.vendorPONumber = vendorPurchaseOrderData.ponumber;
             //this.form.setValue({ponumber: this.vendorPONumber}); 
@@ -112,7 +111,6 @@ export class VendorPurchaseOrderCreateComponent implements OnInit, OnDestroy {
       return;
     }
     //this.isLoading = true;
-    console.log(this.form.value, this.vendorPONumber, this.selectedVendor, this.selectedProduct)
     if (this.mode === 'create') {
 
       this.vendorPurchaseOrderService.addVendorPurchaseOrder(
